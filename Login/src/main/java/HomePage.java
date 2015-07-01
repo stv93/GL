@@ -3,6 +3,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.LoadableComponent;
 
 /**
@@ -28,7 +29,7 @@ public class HomePage extends LoadableComponent<HomePage> {
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl();
         Assert.assertTrue("Not on the right page.", url.equals("http://seltr-kbp1-1.synapse.com:8080/"));
-        //Assert.assertTrue(ExpectedConditions.titleIs("ИнфоПанель [Jenkins]").apply(driver));
+        Assert.assertTrue(ExpectedConditions.titleIs("ИнфоПанель [Jenkins]").apply(driver));
     }
 
     public LoginPage logout(){

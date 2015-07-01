@@ -40,7 +40,7 @@ public class LoginPage extends LoadableComponent<LoginPage> {
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl();
         Assert.assertTrue("Not on the right page.", url.endsWith("login?from=%2F"));
-        //Assert.assertTrue(ExpectedConditions.titleIs("Jenkins").apply(driver));
+        Assert.assertTrue(ExpectedConditions.titleIs("Jenkins").apply(driver));
     }
 
     public HomePage signIn(String login, String password){
