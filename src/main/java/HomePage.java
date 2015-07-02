@@ -9,7 +9,7 @@ public class HomePage extends Page<HomePage> {
 
     public static final String HOME_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/";
 
-    @FindBy(css = "#header > div.login > span > a:nth-child(2)")
+    @FindBy(css = ".login a[href*=\"/logout\"]")
     private WebElement logOut;
 
     public HomePage(WebDriver driver){
