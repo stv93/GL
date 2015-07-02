@@ -17,7 +17,7 @@ public class Tests {
 
     @After
     public void after(){
-        driver.close();
+        driver.quit();
     }
 
     @Test
@@ -26,10 +26,10 @@ public class Tests {
         String password = "admin";
 
         LoginPage page = new LoginPage(driver).get();
-        HomePage homePage = page.signIn(login, password).get();
-        page = homePage.logout().get();
-        LoginErrorPage loginErrorPage = page.incorrectSignIn(login, password + "1").get();
-        page = loginErrorPage.tryAgain().get();
+        HomePage homePage = page.signIn(login, password);
+        page = homePage.logout();
+        LoginErrorPage loginErrorPage = page.incorrectSignIn(login, password + "1");
+        page = loginErrorPage.tryAgain();
         page.signUp();
     }
 
