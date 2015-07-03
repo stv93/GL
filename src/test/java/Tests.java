@@ -1,4 +1,5 @@
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,6 +30,7 @@ public class Tests {
     public static Collection<Object[]> browsers(){
         return Arrays.asList(new Object[][]{{"chrome"}, {"firefox"}});
     }*/
+
 
     @Before
     public  void before() {
@@ -59,6 +62,15 @@ public class Tests {
     }
 
     @Test
+    public void test(){
+        SignUpPage signUpPage = new SignUpPage(driver).get();
+        signUpPage.signUp("","2","2","2","");
+        Assert.assertEquals(signUpPage.errorTextExpected, signUpPage.getErrorText());
+    }
+
+
+
+    /*@Test
     public void test() {
         String login = "admin";
         String password = "admin";
@@ -69,7 +81,7 @@ public class Tests {
         LoginErrorPage loginErrorPage = page.incorrectSignIn(login, password + "1");
         page = loginErrorPage.tryAgain();
         page.signUp();
-    }
+    }*/
 
 
 }
