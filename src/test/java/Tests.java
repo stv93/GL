@@ -7,6 +7,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,13 +35,17 @@ public class Tests {
     }
     private WebDriver getDriver() {
             String browser = System.getProperty("browser");
-            switch (browser) {
+            switch (browser.toLowerCase()) {
                 case "firefox":
                     driver = new FirefoxDriver();
                     break;
                 case "chrome":
-                    //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\ChromeDriver\\chromedriver.exe");
+                    System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
                     driver = new ChromeDriver();
+                    break;
+                case "internetexplorer":
+                    System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
+                    driver = new InternetExplorerDriver();
                     break;
                 default:
                     throw new IllegalStateException("No matching browser type found");

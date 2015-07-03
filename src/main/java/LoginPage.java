@@ -1,6 +1,11 @@
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import java.util.Objects;
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
@@ -25,15 +30,15 @@ public class LoginPage extends Page<LoginPage> {
         super(driver, LOGIN_PAGE_URL);
     }
 
-
-    public HomePage signIn(String login, String password){
+    public HomePage signIn(@NotNull String login, @NotNull String password){
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
         return new HomePage(driver);
     }
 
-    public LoginErrorPage incorrectSignIn(String login, String password){
+    @NotNull
+    public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password){
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
