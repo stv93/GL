@@ -14,22 +14,9 @@ import java.util.Collection;
 /**
  * Created by tetiana.sviatska on 6/30/2015.
  */
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class Tests {
     private WebDriver driver;
-
-    @Before
-    public void before() {
-        String browser = System.getProperty("browser");
-        if (browser.equals("firefox")) {
-            driver = new FirefoxDriver();
-        }
-        else if (browser.equals("chrome")) {
-            System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\ChromeDriver\\chromedriver.exe");
-            driver = new ChromeDriver();
-        }
-        else throw new IllegalStateException("No matching browser type found");
-    }
     /*private String browser;
 
     public Tests(String browser){
@@ -39,29 +26,27 @@ public class Tests {
     @Parameters
     public static Collection<Object[]> browsers(){
         return Arrays.asList(new Object[][]{{"chrome"}, {"firefox"}});
-    }
-
+    }*/
 
     @Before
-
     public  void before() {
         getDriver();
     }
-
-
     private WebDriver getDriver() {
-        switch (browser) {
-            case "firefox":
-                driver = new FirefoxDriver();
-                break;
-            case "chrome":
-                driver = new ChromeDriver();
-                break;
-            default:
-                throw new IllegalStateException("No matching browser type found");
-        }
-        return driver;
-    }*/
+            String browser = System.getProperty("browser");
+            switch (browser) {
+                case "firefox":
+                    driver = new FirefoxDriver();
+                    break;
+                case "chrome":
+                    //System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\ChromeDriver\\chromedriver.exe");
+                    driver = new ChromeDriver();
+                    break;
+                default:
+                    throw new IllegalStateException("No matching browser type found");
+            }
+            return driver;
+    }
 
     @After
     public void after(){
