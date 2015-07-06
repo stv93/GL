@@ -1,4 +1,3 @@
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -8,35 +7,34 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
+import other.RandomForPages;
+import pages.SignUpPage;
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
  */
-//@RunWith(Parameterized.class)
-public class Tests {
+@RunWith(Parameterized.class)
+public class Tests{
     public static WebDriver driver;
     public static SignUpPage signUpPage;
+    private String authorize;
+    String correctName = RandomForPages.randomString(20);
+    String correctEmail = RandomForPages.randomString(5)+"@";
+    String incorrectEmail = RandomForPages.randomString(5);
+    String password = RandomForPages.randomString(6);
+    String incorrectConfirmPassword = RandomForPages.randomString(6);
 
-    String correctName = RandomStringUtils.randomAscii(20);
-    String correctEmail = RandomStringUtils.randomAscii(5)+"@";
-    String incorrectEmail = RandomStringUtils.randomNumeric(5);
-    String password = RandomStringUtils.randomAscii(6);
-    String incorrectConfirmPassword = RandomStringUtils.randomAscii(6);
-
-    /*private String browser;
-
-    public Tests(String browser){
-        this.browser = browser;
+    public Tests(String authorize) {
+        this.authorize = authorize;
     }
 
+
     @Parameters
-    public static Collection<Object[]> browsers(){
-        return Arrays.asList(new Object[][]{{"chrome"}, {"firefox"}});
-    }*/
+    public static Collection<Object[]> data(){
+        return Arrays.asList(new Object[][]{{"authorized"}, {"notauthorized"}});
+    }
 
     @BeforeClass
     public static void beforeForAll() {
@@ -50,7 +48,15 @@ public class Tests {
 
     @Before
     public void before(){
+        authorizeVerify();
         signUpPage = new SignUpPage(driver).get();
+    }
+
+    @After
+    public void after(){
+        if(authorize.equals("authorized")){
+            driver.manage().deleteAllCookies();
+        }
     }
 
 
@@ -68,7 +74,7 @@ public class Tests {
 
     @Test
     public void passwordIsRequiredError(){
-        signUpPage.signUp(correctName,null,password,"",correctEmail);
+        signUpPage.signUp(correctName, null, password, "", correctEmail);
         Assert.assertEquals("Password is required", signUpPage.getErrorText());
     }
 
@@ -85,15 +91,23 @@ public class Tests {
     }
 
     @Test
-    public void successSignUp(){
+    public void successfulSignUp(){
         signUpPage.signUp(correctName, password, password, "", correctEmail);
         Assert.assertEquals("Success", driver.findElement(By.cssSelector("#main-panel-content h1")).getText());
+        driver.manage().deleteAllCookies();
+    }
+
+    @Test
+    public void unsuccessfulSignUp(){
+        signUpPage.signUp(RandomForPages.incorrectRandomUsername(), password, password, "", correctEmail);
+        Assert.assertEquals(" Oops!", driver.findElement(By.cssSelector("#main-panel-content h1")).getText());
     }
 
 
     public String takenName(){
         SignUpPage signUpPage = new SignUpPage(driver).get();
-        signUpPage.signUp(correctName,password,password,"",correctEmail);
+        signUpPage.signUp(correctName, password, password, "", correctEmail);
+        driver.manage().deleteAllCookies();
         signUpPage.get();
         return correctName;
     }
@@ -118,19 +132,17 @@ public class Tests {
         return driver;
     }
 
-
-    /*@Test
-    public void test() {
-        String login = "admin";
-        String password = "admin";
-
-        LoginPage page = new LoginPage(driver).get();
-        HomePage homePage = page.signIn(login, password);
-        page = homePage.logout();
-        LoginErrorPage loginErrorPage = page.incorrectSignIn(login, password + "1");
-        page = loginErrorPage.tryAgain();
-        page.signUp();
-    }*/
+    public void authorizeVerify(){
+        switch (authorize) {
+            case "authorized": {
+                signUpPage = new SignUpPage(driver).get();
+                signUpPage.signUp(RandomForPages.randomString(20), password, password, "", correctEmail);
+            }
+            break;
+            case "notauthorized":
+                break;
+        }
+    }
 
 
 }
