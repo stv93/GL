@@ -62,10 +62,28 @@ public class Tests {
     }
 
     @Test
-    public void test(){
+    public void SignUpVerification(){
         SignUpPage signUpPage = new SignUpPage(driver).get();
-        signUpPage.signUp("","2","2","2","");
-        Assert.assertEquals(signUpPage.errorTextExpected, signUpPage.getErrorText());
+        String correctName = "name"+ Math.random();
+
+        signUpPage.signUp("","","","","");
+        Assert.assertEquals("Invalid e-mail address", signUpPage.getErrorText());
+        signUpPage.clearFields();
+
+        signUpPage.signUp("", "", "12", "2", "@");
+        Assert.assertEquals("User name is required", signUpPage.getErrorText());
+        signUpPage.clearFields();
+
+        signUpPage.signUp(correctName, "", "12", "2", "@");
+        Assert.assertEquals("Password is required", signUpPage.getErrorText());
+        signUpPage.clearFields();
+
+        signUpPage.signUp(correctName, "1", "12", "2", "@");
+        Assert.assertEquals("Password didnt match", signUpPage.getErrorText());
+        signUpPage.clearFields();
+
+        signUpPage.signUp("12", "", "", "", "@");
+        Assert.assertEquals("User name is already taken", signUpPage.getErrorText());
     }
 
 
