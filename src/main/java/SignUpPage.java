@@ -36,6 +36,7 @@ public class SignUpPage extends Page<SignUpPage> {
     }
 
     public SignUpPage signUp(String username, String password, String confirmPassword, String fullname, String email){
+
         userName.sendKeys(username);
         this.password.sendKeys(password);
         this.confirmPassword.sendKeys(confirmPassword);
@@ -43,14 +44,6 @@ public class SignUpPage extends Page<SignUpPage> {
         this.email.sendKeys(email);
         signUpButton.click();
         return new SignUpPage(driver);
-    }
-
-    public void clearFields(){
-        userName.clear();
-        password.clear();
-        confirmPassword.clear();
-        fullname.clear();
-        email.clear();
     }
 
     public String getErrorText(){

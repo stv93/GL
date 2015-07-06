@@ -1,10 +1,9 @@
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.apache.commons.lang.RandomStringUtils;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -19,7 +18,15 @@ import java.util.Collection;
  */
 //@RunWith(Parameterized.class)
 public class Tests {
-    private WebDriver driver;
+    public static WebDriver driver;
+    public static SignUpPage signUpPage;
+
+    String correctName = RandomStringUtils.randomAscii(20);
+    String correctEmail = RandomStringUtils.randomAscii(5)+"@";
+    String incorrectEmail = RandomStringUtils.randomNumeric(5);
+    String password = RandomStringUtils.randomAscii(6);
+    String incorrectConfirmPassword = RandomStringUtils.randomAscii(6);
+
     /*private String browser;
 
     public Tests(String browser){
@@ -31,61 +38,85 @@ public class Tests {
         return Arrays.asList(new Object[][]{{"chrome"}, {"firefox"}});
     }*/
 
-
-    @Before
-    public  void before() {
-        getDriver();
-    }
-    private WebDriver getDriver() {
-            String browser = System.getProperty("browser");
-            switch (browser.toLowerCase()) {
-                case "firefox":
-                    driver = new FirefoxDriver();
-                    break;
-                case "chrome":
-                    System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
-                    driver = new ChromeDriver();
-                    break;
-                case "internetexplorer":
-                    System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
-                    driver = new InternetExplorerDriver();
-                    break;
-                default:
-                    throw new IllegalStateException("No matching browser type found");
-            }
-            return driver;
+    @BeforeClass
+    public static void beforeForAll() {
+        driver = getDriver();
     }
 
-    @After
-    public void after(){
+    @AfterClass
+    public static  void afterForAll(){
         driver.quit();
     }
 
+    @Before
+    public void before(){
+        signUpPage = new SignUpPage(driver).get();
+    }
+
+
     @Test
-    public void SignUpVerification(){
-        SignUpPage signUpPage = new SignUpPage(driver).get();
-        String correctName = "name"+ Math.random();
-
-        signUpPage.signUp("","","","","");
-        Assert.assertEquals("Invalid e-mail address", signUpPage.getErrorText());
-        signUpPage.clearFields();
-
-        signUpPage.signUp("", "", "12", "2", "@");
-        Assert.assertEquals("User name is required", signUpPage.getErrorText());
-        signUpPage.clearFields();
-
-        signUpPage.signUp(correctName, "", "12", "2", "@");
-        Assert.assertEquals("Password is required", signUpPage.getErrorText());
-        signUpPage.clearFields();
-
-        signUpPage.signUp(correctName, "1", "12", "2", "@");
-        Assert.assertEquals("Password didnt match", signUpPage.getErrorText());
-        signUpPage.clearFields();
-
-        signUpPage.signUp("12", "", "", "", "@");
+    public void nameIsTakenError() {
+        signUpPage.signUp(takenName(), password, password, "", correctEmail);
         Assert.assertEquals("User name is already taken", signUpPage.getErrorText());
     }
 
+    @Test
+    public void invalidEmailError(){
+        signUpPage.signUp(correctName,password,password,"",incorrectEmail);
+        Assert.assertEquals("Invalid e-mail address", signUpPage.getErrorText());
+    }
+
+    @Test
+    public void passwordIsRequiredError(){
+        signUpPage.signUp(correctName,null,password,"",correctEmail);
+        Assert.assertEquals("Password is required", signUpPage.getErrorText());
+    }
+
+    @Test
+    public void usernameIsRequiredError(){
+        signUpPage.signUp(null, password, password, "", correctEmail);
+        Assert.assertEquals("User name is required", signUpPage.getErrorText());
+    }
+
+    @Test
+    public void passwordDidntMatchError(){
+        signUpPage.signUp(correctName, password, incorrectConfirmPassword, "", correctEmail);
+        Assert.assertEquals("Password didnt match", signUpPage.getErrorText());
+    }
+
+    @Test
+    public void successSignUp(){
+        signUpPage.signUp(correctName, password, password, "", correctEmail);
+        Assert.assertEquals("Success", driver.findElement(By.cssSelector("#main-panel-content h1")).getText());
+    }
+
+
+    public String takenName(){
+        SignUpPage signUpPage = new SignUpPage(driver).get();
+        signUpPage.signUp(correctName,password,password,"",correctEmail);
+        signUpPage.get();
+        return correctName;
+    }
+
+    private static WebDriver getDriver() {
+        String browser = System.getProperty("browser");
+        switch (browser.toLowerCase()) {
+            case "firefox":
+                driver = new FirefoxDriver();
+                break;
+            case "chrome":
+                System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
+                driver = new ChromeDriver();
+                break;
+            case "internetexplorer":
+                System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
+                driver = new InternetExplorerDriver();
+                break;
+            default:
+                throw new IllegalStateException("No matching browser type found");
+        }
+        return driver;
+    }
 
 
     /*@Test
