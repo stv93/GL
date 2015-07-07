@@ -15,11 +15,11 @@ public class HomePage extends Page<HomePage> {
     @FindBy(css = ".login a[href*=\"/logout\"]")
     private WebElement logOut;
 
-    public HomePage(WebDriver driver){
+    public HomePage(WebDriver driver) {
         super(driver, HOME_PAGE_URL);
     }
 
-    public LoginPage logout(){
+    public LoginPage logout() {
         logOut.click();
         return new LoginPage(driver);
     }

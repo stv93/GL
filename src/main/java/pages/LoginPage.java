@@ -25,11 +25,11 @@ public class LoginPage extends Page<LoginPage> {
     @FindBy(css = "#main-panel-content a[href]")
     private WebElement signUpLink;
 
-    public LoginPage(WebDriver driver){
+    public LoginPage(WebDriver driver) {
         super(driver, LOGIN_PAGE_URL);
     }
 
-    public HomePage signIn(@NotNull String login, @NotNull String password){
+    public HomePage signIn(@NotNull String login, @NotNull String password) {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
@@ -37,14 +37,14 @@ public class LoginPage extends Page<LoginPage> {
     }
 
     @NotNull
-    public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password){
+    public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password) {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
         return new LoginErrorPage(driver);
     }
 
-    public SignUpPage signUp(){
+    public SignUpPage signUp() {
         signUpLink.click();
         return new SignUpPage(driver);
     }

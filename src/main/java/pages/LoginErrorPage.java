@@ -15,11 +15,11 @@ public class LoginErrorPage extends Page<LoginErrorPage> {
     @FindBy(css = "#main-panel-content > div:nth-child(2) > a")
     private WebElement tryAgain;
 
-    public LoginErrorPage(WebDriver driver){
-        super(driver,LOGIN_ERROR_PAGE_URL);
+    public LoginErrorPage(WebDriver driver) {
+        super(driver, LOGIN_ERROR_PAGE_URL);
     }
 
-    public LoginPage tryAgain(){
+    public LoginPage tryAgain() {
         tryAgain.click();
         return new LoginPage(driver);
     }

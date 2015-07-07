@@ -1,4 +1,7 @@
 package pages;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -9,17 +12,25 @@ import org.openqa.selenium.support.ui.LoadableComponent;
  */
 public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
 
+    protected Logger log = LogManager.getLogger(this);
     protected WebDriver driver;
     private String currentPageUrl;
 
-    public Page(WebDriver driver, String pageUrl){
+    public Page(WebDriver driver, String pageUrl) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
         this.currentPageUrl = pageUrl;
     }
 
+    public Page(WebDriver driver, String beforeName, String userName, String afterName) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+        this.currentPageUrl = beforeName+userName+afterName;
+    }
+
     @Override
-    protected void load(){
+    protected void load() {
+        log.debug("Loading url: {}", currentPageUrl);
         driver.get(currentPageUrl);
     }
 

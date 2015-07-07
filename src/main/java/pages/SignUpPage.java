@@ -1,5 +1,7 @@
 package pages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,8 +13,8 @@ import org.openqa.selenium.support.FindBy;
 public class SignUpPage extends Page<SignUpPage> {
 
     public static final String SIGN_UP_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/signup";
-    public String errorTextExpected;
 
+    public String errorTextExpected;
     @FindBy(id = "username")
     private WebElement userName;
 
@@ -34,12 +36,13 @@ public class SignUpPage extends Page<SignUpPage> {
     @FindBy(css = ".error")
     private WebElement error;
 
-    public SignUpPage(WebDriver driver){
+    public SignUpPage(WebDriver driver) {
         super(driver, SIGN_UP_PAGE_URL);
     }
 
-    public SignUpPage signUp(String username, String password, String confirmPassword, String fullname, String email){
-
+    public SignUpPage signUp(String username, String password, String confirmPassword, String fullname, String email) {
+        log.info("Signing up with: (User: {}, Pass: {}, Confirm pass: {}, Name: {}, Email: {})", username, password,
+                confirmPassword, fullname, email);
         userName.sendKeys(username);
         this.password.sendKeys(password);
         this.confirmPassword.sendKeys(confirmPassword);
@@ -49,7 +52,7 @@ public class SignUpPage extends Page<SignUpPage> {
         return new SignUpPage(driver);
     }
 
-    public String getErrorText(){
+    public String getErrorText() {
         return error.getText();
     }
 }
