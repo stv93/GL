@@ -16,10 +16,11 @@ public class UserDeletingPage extends Page<UserDeletingPage> {
     static String UserDeletingPageUrlAfterName = "/delete";
 
     public UserDeletingPage(WebDriver driver, String userName) {
-        super(driver, UserDeletingPageUrlBeforeName, userName, UserDeletingPageUrlAfterName);
+        super(driver, UserDeletingPageUrlBeforeName + userName + UserDeletingPageUrlAfterName);
     }
 
     public void deleteUser(){
         deleteButton.click();
     }
+
 }

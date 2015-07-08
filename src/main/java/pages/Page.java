@@ -22,12 +22,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         this.currentPageUrl = pageUrl;
     }
 
-    public Page(WebDriver driver, String beforeName, String userName, String afterName) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-        this.currentPageUrl = beforeName+userName+afterName;
-    }
-
     @Override
     protected void load() {
         log.debug("Loading url: {}", currentPageUrl);

@@ -1,3 +1,5 @@
+import com.thoughtworks.selenium.ScreenshotListener;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hamcrest.CoreMatchers;
@@ -10,6 +12,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -18,13 +22,15 @@ import other.RandomForPages;
 import pages.LoginPage;
 import pages.SignUpPage;
 import pages.UserDeletingPage;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
@@ -67,6 +73,7 @@ public class Tests {
         @Override
         protected void failed(Throwable e, Description d) {
             logger.info("Test: {} - FAILED. Reason: {}", d.getMethodName(), e.getMessage());
+            makeScreenshot(d);
         }
 
         @Override
@@ -236,5 +243,19 @@ public class Tests {
             }
         }
         logger.debug("Users is deleted");
+    }
+
+    public static void makeScreenshot(Description d) {
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(
+                OutputType.FILE);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+        String date =  sdf.format(Calendar.getInstance().getTime());
+        String scrFilename = d.getMethodName()+ date +"-Screenshot.jpeg";
+        File outputFile = new File("D:\\Screenshots", scrFilename);
+        try {
+            FileUtils.copyFile(scrFile, outputFile);
+        } catch (IOException ioe) {
+            logger.error("Erroring screenshot after exception.", ioe);
+        }
     }
 }
