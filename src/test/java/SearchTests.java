@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import other.MethodsForTests;
 import pages.HomePage;
 import pages.Page;
+import pages.UserPage;
 
 
 /**
@@ -35,8 +36,9 @@ public class SearchTests {
     }
 
     @Test
-    public void test(){
-        page.search("t", "test");
+    public void selectExistentValueFromAutoComplete(){
+        UserPage userPage = page.search("t", "test");
+        Assert.assertEquals("test", userPage.getName());
     }
 
 }

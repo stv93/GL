@@ -34,19 +34,17 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         this.currentPageUrl = pageUrl;
     }
 
-    /*public void search(String subString, String expectedResult){
+
+    public UserPage search(String subString, String expectedResult){
         boolean presenceOfResult = false;
         Actions action = new Actions(driver);
         action.moveToElement(searchBox).click().sendKeys(subString).moveToElement(autoComplete).perform();
-        *//*Wait wait = new WebDriverWait(driver, 5, 5000);
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("li")));*//*
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         List<WebElement> list = autoComplete.findElements(By.tagName("li"));
-
         for (WebElement li : list) {
             if (li.getText().equals(expectedResult)) {
                 presenceOfResult = true;
@@ -55,34 +53,10 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
             }
         }
         if(!presenceOfResult){
-            action.moveToElement(searchBox).sendKeys(Keys.ENTER).perform();
+            //action.moveToElement(searchBox).sendKeys(Keys.ENTER).perform();
+            throw new RuntimeException("Item: " + expectedResult + " is absent in the list");
         }
-
-    }
-*/
-    public void search(String subString, String expectedResult){
-        boolean presenceOfResult = false;
-        Actions action = new Actions(driver);
-        action.moveToElement(searchBox).click().sendKeys(subString).moveToElement(autoComplete).perform();
-        /*Wait wait = new WebDriverWait(driver, 5, 5000);
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("li")));*/
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        List<WebElement> list = autoComplete.findElements(By.tagName("li"));
-
-        for (WebElement li : list) {
-            if (li.getText().equals(expectedResult)) {
-                presenceOfResult = true;
-                action.click(li).sendKeys(Keys.ENTER).perform();
-                break;
-            }
-        }
-        if(!presenceOfResult){
-            action.moveToElement(searchBox).sendKeys(Keys.ENTER).perform();
-        }
+        return new UserPage(driver, expectedResult);
     }
 
     @Override
