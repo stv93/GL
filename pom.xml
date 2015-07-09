@@ -20,7 +20,7 @@
                 <version>2.18</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <browser>Firefox</browser>
+                        <browser>firefox</browser>
                         <log4j.configurationFile>log4j.xml</log4j.configurationFile>
                     </systemPropertyVariables>
                 </configuration>

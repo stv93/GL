@@ -2,6 +2,7 @@ package pages;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -42,6 +43,12 @@ public class LoginPage extends Page<LoginPage> {
         passwordLocator.sendKeys(password);
         signInButton.click();
         return new LoginErrorPage(driver);
+    }
+
+    @Override
+    protected void isLoaded() throws Error {
+        String url = driver.getCurrentUrl();
+        Assert.assertTrue("Not on the right page.", url.contains(LOGIN_PAGE_URL));
     }
 
     public SignUpPage signUp() {

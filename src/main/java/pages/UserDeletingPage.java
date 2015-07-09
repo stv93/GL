@@ -9,18 +9,18 @@ import org.openqa.selenium.support.FindBy;
  */
 public class UserDeletingPage extends Page<UserDeletingPage> {
 
+    public static String DELETE_PAGE_FORMAT = "http://seltr-kbp1-1.synapse.com:8080/user/%s/delete";
+
     @FindBy(id = "yui-gen1-button")
     private WebElement deleteButton;
 
-    static String UserDeletingPageUrlBeforeName = "http://seltr-kbp1-1.synapse.com:8080/user/";
-    static String UserDeletingPageUrlAfterName = "/delete";
-
     public UserDeletingPage(WebDriver driver, String userName) {
-        super(driver, UserDeletingPageUrlBeforeName + userName + UserDeletingPageUrlAfterName);
+        super(driver, String.format(DELETE_PAGE_FORMAT, userName));
     }
 
-    public void deleteUser(){
+    public HomePage deleteUser(){
         deleteButton.click();
+        return new HomePage(driver);
     }
 
 }

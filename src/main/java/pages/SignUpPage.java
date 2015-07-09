@@ -14,7 +14,6 @@ public class SignUpPage extends Page<SignUpPage> {
 
     public static final String SIGN_UP_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/signup";
 
-    public String errorTextExpected;
     @FindBy(id = "username")
     private WebElement userName;
 
@@ -33,14 +32,12 @@ public class SignUpPage extends Page<SignUpPage> {
     @FindBy(id = "yui-gen1-button")
     private WebElement signUpButton;
 
-    @FindBy(css = ".error")
-    private WebElement error;
-
     public SignUpPage(WebDriver driver) {
         super(driver, SIGN_UP_PAGE_URL);
     }
 
-    public SignUpPage signUp(String username, String password, String confirmPassword, String fullname, String email) {
+    public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String
+            email) {
         log.info("Signing up with: (User: {}, Pass: {}, Confirm pass: {}, Name: {}, Email: {})", username, password,
                 confirmPassword, fullname, email);
         userName.sendKeys(username);
@@ -49,10 +46,6 @@ public class SignUpPage extends Page<SignUpPage> {
         this.fullname.sendKeys(fullname);
         this.email.sendKeys(email);
         signUpButton.click();
-        return new SignUpPage(driver);
-    }
-
-    public String getErrorText() {
-        return error.getText();
+        return new SignUpResultPage(driver);
     }
 }

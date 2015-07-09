@@ -23,4 +23,5 @@ public class HomePage extends Page<HomePage> {
         logOut.click();
         return new LoginPage(driver);
     }
+
 }
