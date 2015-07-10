@@ -11,6 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.*;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -27,23 +28,22 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
     protected Logger log = LogManager.getLogger(this);
     protected WebDriver driver;
     private String currentPageUrl;
+    protected WebDriverWait wait;
+
 
     public Page(WebDriver driver, String pageUrl) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
         this.currentPageUrl = pageUrl;
+        wait = new WebDriverWait(driver, 2, 300);
     }
 
-
-    public UserPage search(String subString, String expectedResult){
+    public UserPage autoCompleteSearch(String subString, String expectedResult){
+        log.info("Searching for {} with selecting from autocomlete list {}", subString, expectedResult);
         boolean presenceOfResult = false;
         Actions action = new Actions(driver);
-        action.moveToElement(searchBox).click().sendKeys(subString).moveToElement(autoComplete).perform();
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        searchBox.sendKeys(subString);
+        wait.until(ExpectedConditions.visibilityOf(autoComplete));
         List<WebElement> list = autoComplete.findElements(By.tagName("li"));
         for (WebElement li : list) {
             if (li.getText().equals(expectedResult)) {
@@ -53,7 +53,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
             }
         }
         if(!presenceOfResult){
-            //action.moveToElement(searchBox).sendKeys(Keys.ENTER).perform();
             throw new RuntimeException("Item: " + expectedResult + " is absent in the list");
         }
         return new UserPage(driver, expectedResult);

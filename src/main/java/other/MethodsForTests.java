@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by tetiana.sviatska on 7/8/2015.
@@ -54,14 +56,14 @@ public abstract class MethodsForTests {
      * @return login of the user which was used for authentication or {@code null} if there was an exception
      */
     @Nullable
-    public static String makeAuthenticatedSession(@NotNull WebDriver wd){
+    public static String makeAuthenticatedSession(@NotNull WebDriver wd, Collection<String> list){
         try {
             SignUpPage signUpPage = new SignUpPage(wd).get();
             String randomName = RandomForPages.randomString(20);
             String password = RandomForPages.randomString(5);
             String correctEmail = RandomForPages.randomString(6) + "@";
-            signUpPage.signUp(randomName, password, password, RandomForPages.randomString(5), correctEmail);
-            signUpPage.get();
+            signUpPage.signUp(randomName, password, password, randomName, correctEmail);
+            list.add(randomName);
             return randomName;
         }
         catch (Exception e) {
@@ -72,7 +74,6 @@ public abstract class MethodsForTests {
 
     public static void usersClearing(Iterable<String> list, WebDriver driver){
         LogManager.getLogger().debug("Removing users");
-        logInAsAdmin(driver);
         for (String name : list){
             try{
                 UserDeletingPage userDeletingPage = new UserDeletingPage(driver, name).get();
@@ -99,16 +100,15 @@ public abstract class MethodsForTests {
         }
     }
 
-    public static HomePage logInAsAdmin(WebDriver driver){
+    @Nullable
+    public static void logInAsAdmin(WebDriver driver){
         LogManager.getLogger().info("Logging in as admin");
         try {
             LoginPage log = new LoginPage(driver).get();
-            HomePage homePage = log.signIn("admin", "admin");
-            return homePage;
+            log.signIn("admin", "admin");
         }
         catch(Exception e){
             LogManager.getLogger().debug(e.getMessage());
         }
-        return null;
     }
 }
