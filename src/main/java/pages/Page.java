@@ -43,7 +43,11 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         boolean presenceOfResult = false;
         Actions action = new Actions(driver);
         searchBox.sendKeys(subString);
-        wait.until(ExpectedConditions.visibilityOf(autoComplete));
+        try {
+            wait.until(ExpectedConditions.visibilityOf(autoComplete));
+        }catch(org.openqa.selenium.TimeoutException e){
+            throw new RuntimeException("There isn't such value: " + subString);
+        }
         List<WebElement> list = autoComplete.findElements(By.tagName("li"));
         for (WebElement li : list) {
             if (li.getText().equals(expectedResult)) {

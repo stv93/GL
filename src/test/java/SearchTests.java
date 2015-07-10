@@ -1,13 +1,12 @@
 import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.WebDriver;
 import other.MethodsForTests;
 import other.RandomForPages;
 import pages.HomePage;
-import pages.Page;
 import pages.UserPage;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,17 +32,20 @@ public class SearchTests {
             }
             finally {
                 MethodsForTests.usersClearing(list, driver);
-               //driver.quit();
+                driver.quit();
             }
         }
     };
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
 
     @Before
     public void before(){
         page = new HomePage(driver).get();
+        driver.navigate().refresh();
     }
-
 
     @Test
     public void selectExistentValueFromAutoComplete(){
@@ -53,6 +55,14 @@ public class SearchTests {
 
     @Test
     public void selectNonExistentValueFromAutoComplete(){
+        thrown.expectMessage("Item: " + expectedResult.substring(10)+" is absent in the list");
         page.autoCompleteSearch(expectedResult, expectedResult.substring(10));
+    }
+
+    @Test
+    public void searchForNonExistentValue(){
+        String nonExistentValue = RandomForPages.randomString(15);
+        thrown.expectMessage("There isn't such value: "+ nonExistentValue);
+        page.autoCompleteSearch(nonExistentValue, null);
     }
 }
