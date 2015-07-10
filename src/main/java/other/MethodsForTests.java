@@ -7,13 +7,13 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import pages.HomePage;
 import pages.LoginPage;
 import pages.SignUpPage;
 import pages.UserDeletingPage;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,7 +21,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by tetiana.sviatska on 7/8/2015.
@@ -31,13 +30,18 @@ public abstract class MethodsForTests {
     public static WebDriver getDriver() {
         WebDriver driver;
         String browser = System.getProperty("browser");
+        String language = System.getProperty("language");
         switch (browser.toLowerCase()) {
             case "firefox":
-                driver = new FirefoxDriver();
+                FirefoxProfile profile = new FirefoxProfile();
+                profile.setPreference( "intl.accept_languages", language);
+                driver = new FirefoxDriver(profile);
                 break;
             case "chrome":
                 System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
-                driver = new ChromeDriver();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--lang="+language);
+                driver = new ChromeDriver(options);
                 break;
             case "internetexplorer":
                 System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
@@ -100,7 +104,6 @@ public abstract class MethodsForTests {
         }
     }
 
-    @Nullable
     public static void logInAsAdmin(WebDriver driver){
         LogManager.getLogger().info("Logging in as admin");
         try {
