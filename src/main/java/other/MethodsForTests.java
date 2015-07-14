@@ -14,13 +14,19 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import pages.LoginPage;
 import pages.SignUpPage;
 import pages.UserDeletingPage;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by tetiana.sviatska on 7/8/2015.
@@ -34,13 +40,14 @@ public abstract class MethodsForTests {
         switch (browser.toLowerCase()) {
             case "firefox":
                 FirefoxProfile profile = new FirefoxProfile();
-                profile.setPreference( "intl.accept_languages", language);
+                profile.setPreference("intl.accept_languages", language);
+                profile.setEnableNativeEvents(true);
                 driver = new FirefoxDriver(profile);
                 break;
             case "chrome":
                 System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
                 ChromeOptions options = new ChromeOptions();
-                options.addArguments("--lang="+language);
+                options.addArguments("--lang=" + language);
                 driver = new ChromeDriver(options);
                 break;
             case "internetexplorer":
@@ -55,34 +62,39 @@ public abstract class MethodsForTests {
     }
 
     /**
-     * This method is used to sign up with random account just to become authorized
-     * @param wd driver which should be used to perform authentication operation
+     * This method is used to create new user
+     *
      * @return login of the user which was used for authentication or {@code null} if there was an exception
      */
     @Nullable
-    public static String makeAuthenticatedSession(@NotNull WebDriver wd, Collection<String> list){
+    public static String makeAuthenticatedSession(@Nullable Collection<String> list) {
+        WebDriver wd = null;
         try {
+            wd = new FirefoxDriver();
             SignUpPage signUpPage = new SignUpPage(wd).get();
             String randomName = RandomForPages.randomString(20);
             String password = RandomForPages.randomString(5);
             String correctEmail = RandomForPages.randomString(6) + "@";
             signUpPage.signUp(randomName, password, password, randomName, correctEmail);
-            list.add(randomName);
+            Optional.ofNullable(list).ifPresent(l -> l.add(randomName));
             return randomName;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LogManager.getLogger().debug(e.getMessage());
+        } finally {
+            if (wd != null) {
+                wd.quit();
+            }
         }
         return null;
     }
 
-    public static void usersClearing(Iterable<String> list, WebDriver driver){
+    public static void usersClearing(Iterable<String> list, WebDriver driver) {
         LogManager.getLogger().debug("Removing users");
-        for (String name : list){
-            try{
+        for (String name : list) {
+            try {
                 UserDeletingPage userDeletingPage = new UserDeletingPage(driver, name).get();
                 userDeletingPage.deleteUser();
-            }catch (Exception e){
+            } catch (Exception e) {
                 LogManager.getLogger().debug(e.getMessage());
             }
         }
@@ -94,7 +106,7 @@ public abstract class MethodsForTests {
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(
                 OutputType.FILE);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
-        String scrFilename = name + formatter.format(LocalDateTime.now()) +"-Screenshot.png";
+        String scrFilename = name + formatter.format(LocalDateTime.now()) + "-Screenshot.png";
         File output = new File("Screenshots", scrFilename);
         output.mkdirs();
         try {
@@ -104,14 +116,24 @@ public abstract class MethodsForTests {
         }
     }
 
-    public static void logInAsAdmin(WebDriver driver){
+    public static void logInAsAdmin(WebDriver driver) {
         LogManager.getLogger().info("Logging in as admin");
         try {
             LoginPage log = new LoginPage(driver).get();
             log.signIn("admin", "admin");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             LogManager.getLogger().debug(e.getMessage());
         }
+    }
+
+
+    @NotNull
+    public static String encode(@NotNull String str) {
+        try {
+            return URLEncoder.encode(str, "UTF-8").replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 }

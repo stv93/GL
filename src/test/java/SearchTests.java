@@ -14,8 +14,8 @@ import java.util.Set;
 /**
  * Created by tetiana.sviatska on 7/8/2015.
  */
-public class SearchTests {
-    private static WebDriver driver;
+public class SearchTests extends BaseTests {
+
     private HomePage page;
     private static String expectedResult;
     private static Set<String> list = new HashSet<>();
@@ -25,8 +25,7 @@ public class SearchTests {
         @Override
         public void evaluate() throws Throwable {
             driver = MethodsForTests.getDriver();
-            expectedResult = MethodsForTests.makeAuthenticatedSession(driver,list);
-            MethodsForTests.logInAsAdmin(driver);
+            expectedResult = MethodsForTests.makeAuthenticatedSession(list);
             try {
                 base.evaluate();
             }
@@ -44,7 +43,6 @@ public class SearchTests {
     @Before
     public void before(){
         page = new HomePage(driver).get();
-        driver.navigate().refresh();
     }
 
     @Test

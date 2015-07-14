@@ -28,11 +28,10 @@ import java.util.Set;
  * Created by tetiana.sviatska on 6/30/2015.
  */
 @RunWith(Parameterized.class)
-public class Tests {
+public class Tests extends BaseTests {
 
-    public static WebDriver driver;
     public static SignUpPage signUpPage;
-    private final Logger logger = LogManager.getLogger(Tests.class);
+
     private boolean authorize;
     private static String authorizedUserName;
 
@@ -57,31 +56,7 @@ public class Tests {
     @Retention(RetentionPolicy.RUNTIME)
     private @interface NeedsCleanUp {}
 
-    @Rule
-    public TestWatcher watcher = new TestWatcher() {
 
-        @Override
-        protected void starting(Description d) {
-            logger.info("Starting test: {}", d.getMethodName());
-        }
-
-        @Override
-        protected void skipped(AssumptionViolatedException e, Description d) {
-            logger.info("Test: {} - SKIPPED. Reason: {}", d.getMethodName(), e.getMessage());
-        }
-
-        @Override
-        protected void failed(Throwable e, Description d) {
-            logger.info("Test: {} - FAILED. Reason: {}", d.getMethodName(), e.getMessage());
-            MethodsForTests.makeScreenshot(d.getMethodName(), driver);
-        }
-
-        @Override
-        protected void succeeded(Description d) {
-            logger.info("Test: {} - PASSED", d.getMethodName());
-        }
-
-    };
 
     @Rule
     public TestRule cleaningCookiesRule = (Statement base, Description d) -> new Statement() {
@@ -120,7 +95,7 @@ public class Tests {
         @Override
         public void evaluate() throws Throwable {
             if (authorizedUserName == null) {
-                authorizedUserName = MethodsForTests.makeAuthenticatedSession(driver, list);
+                authorizedUserName = MethodsForTests.makeAuthenticatedSession(list);
             }
             base.evaluate();
         }
@@ -142,8 +117,10 @@ public class Tests {
     @Ignore
     @Test
     public void nameIsTakenError() {
-        String username = MethodsForTests.makeAuthenticatedSession(driver, list);
+        // FIXME I'm pre-condition
+        String username = MethodsForTests.makeAuthenticatedSession(list);
         Assume.assumeThat(username, CoreMatchers.notNullValue());
+
         SignUpResultPage resultPage = signUpPage.signUp(username, password, password, "", correctEmail);
         Assert.assertEquals("User name is already taken", resultPage.getErrorText());
     }
@@ -188,6 +165,5 @@ public class Tests {
         SignUpResultPage resultPage = signUpPage.signUp(incorrectUserName, password, password, "", correctEmail);
         Assert.assertEquals(" Oops!", resultPage.getMessageText());
     }
-
 
 }

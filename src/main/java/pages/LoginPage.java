@@ -12,7 +12,7 @@ import org.openqa.selenium.support.FindBy;
  */
 public class LoginPage extends Page<LoginPage> {
 
-    public static final String LOGIN_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080//login";
+    public static final String LOGIN_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/login";
 
     @FindBy(id = "j_username")
     private WebElement loginLocator;

@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 /**
  * Created by tetiana.sviatska on 7/9/2015.
  */
-public class UserPage extends Page<UserPage>{
+public class UserPage extends AuthenticationBasePage<UserPage>{
     private static String USER_NAME_URL = "http://seltr-kbp1-1.synapse.com:8080/user/%s/";
 
     @FindBy(css = "#main-panel-content h1")
