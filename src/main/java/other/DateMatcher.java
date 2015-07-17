@@ -17,13 +17,13 @@ public class DateMatcher extends TypeSafeMatcher<LocalDateTime> {
     private LocalDateTime time;
 
     private DateMatcher(@NotNull LocalDateTime time, @Nullable TemporalUnit unit) {
-        this.time = time;
         this.unit = unit;
+        this.time = unit != null ? time.truncatedTo(unit) : time;
     }
 
     @Override
     protected boolean matchesSafely(LocalDateTime localDateTime) {
-        return unit != null ? time.truncatedTo(unit).isEqual(localDateTime) : time.isEqual(localDateTime);
+        return time.isEqual(localDateTime);
     }
 
     @Override

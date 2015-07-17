@@ -13,7 +13,6 @@ import other.MethodsForTests;
 import pages.HomePage;
 import pages.ProjectBuildPage;
 import pages.ProjectPage;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -38,7 +37,7 @@ public class ProjectTests extends BaseTests {
             try {
                 base.evaluate();
             } finally {
-                // driver.quit();
+                driver.quit();
             }
         }
     };
