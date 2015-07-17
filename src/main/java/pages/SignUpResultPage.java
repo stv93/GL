@@ -1,5 +1,6 @@
 package pages;
 
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,14 +13,22 @@ public class SignUpResultPage extends Page<SignUpResultPage> {
     @FindBy(css = ".error")
     private WebElement error;
 
-    @FindBy(css = "#main-panel-content h1")
+    @FindBy(css = "#main-panel h1")
     private WebElement message;
 
-    public SignUpResultPage(WebDriver driver) {
-        super(driver, "http://seltr-kbp1-1.synapse.com:8080/securityRealm/createAccount");
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/securityRealm/createAccount";
+    }
+
+    public SignUpResultPage(@NotNull WebDriver driver) {
+        super(driver);
     }
 
     public String getErrorText() {
+        if(isLoggedIn()){
+            return null;
+        }
         return error.getText();
     }
 

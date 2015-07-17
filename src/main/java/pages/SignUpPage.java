@@ -1,18 +1,14 @@
 package pages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
  */
 public class SignUpPage extends Page<SignUpPage> {
-
-    public static final String SIGN_UP_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/signup";
 
     @FindBy(id = "username")
     private WebElement userName;
@@ -32,8 +28,13 @@ public class SignUpPage extends Page<SignUpPage> {
     @FindBy(id = "yui-gen1-button")
     private WebElement signUpButton;
 
-    public SignUpPage(WebDriver driver) {
-        super(driver, SIGN_UP_PAGE_URL);
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/signup";
+    }
+
+    public SignUpPage(@NotNull WebDriver driver) {
+        super(driver);
     }
 
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String

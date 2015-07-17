@@ -12,8 +12,6 @@ import org.openqa.selenium.support.FindBy;
  */
 public class LoginPage extends Page<LoginPage> {
 
-    public static final String LOGIN_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/login";
-
     @FindBy(id = "j_username")
     private WebElement loginLocator;
 
@@ -26,14 +24,23 @@ public class LoginPage extends Page<LoginPage> {
     @FindBy(css = "#main-panel-content a[href]")
     private WebElement signUpLink;
 
-    public LoginPage(WebDriver driver) {
-        super(driver, LOGIN_PAGE_URL);
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/login";
     }
 
+    public LoginPage(@NotNull WebDriver driver) {
+        super(driver);
+    }
+
+    @NotNull
     public HomePage signIn(@NotNull String login, @NotNull String password) {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
+        if(!isLoggedIn()){
+            throw new Error("Entered login and password are incorrect");
+        }
         return new HomePage(driver);
     }
 
@@ -42,13 +49,16 @@ public class LoginPage extends Page<LoginPage> {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
+        if(isLoggedIn()){
+            throw new Error("Entered login and password are correct");
+        }
         return new LoginErrorPage(driver);
     }
 
     @Override
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl();
-        Assert.assertTrue("Not on the right page.", url.contains(LOGIN_PAGE_URL));
+        Assert.assertTrue("Not on the right page.", url.contains(getPageUrl()));
     }
 
     public SignUpPage signUp() {

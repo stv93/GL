@@ -1,5 +1,6 @@
 package pages;
 
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,13 +10,14 @@ import org.openqa.selenium.support.FindBy;
  */
 public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
 
-    public static String DELETE_PAGE_FORMAT = "http://seltr-kbp1-1.synapse.com:8080/user/%s/delete";
-
     @FindBy(id = "yui-gen1-button")
     private WebElement deleteButton;
 
-    public UserDeletingPage(WebDriver driver, String userName) {
-        super(driver, String.format(DELETE_PAGE_FORMAT, userName));
+    private String userName;
+
+    public UserDeletingPage(@NotNull WebDriver driver, @NotNull String userName) {
+        super(driver);
+        this.userName = userName;
     }
 
     public HomePage deleteUser(){
@@ -23,4 +25,8 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
         return new HomePage(driver);
     }
 
+    @Override
+    public String getPageUrl() {
+        return String.format("http://seltr-kbp1-1.synapse.com:8080/user/%s/delete", userName);
+    }
 }

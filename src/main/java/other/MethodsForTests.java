@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +32,9 @@ import java.util.Optional;
 /**
  * Created by tetiana.sviatska on 7/8/2015.
  */
-public abstract class MethodsForTests {
+public class MethodsForTests {
+
+    private MethodsForTests(){}
 
     public static WebDriver getDriver() {
         WebDriver driver;
@@ -88,7 +91,7 @@ public abstract class MethodsForTests {
         return null;
     }
 
-    public static void usersClearing(Iterable<String> list, WebDriver driver) {
+    public static void usersClearing(@NotNull Iterable<String> list, @NotNull WebDriver driver) {
         LogManager.getLogger().debug("Removing users");
         for (String name : list) {
             try {
@@ -101,22 +104,34 @@ public abstract class MethodsForTests {
         LogManager.getLogger().debug("Users is deleted");
     }
 
-    public static void makeScreenshot(String name, WebDriver driver) {
+    public static void makeScreenshot(@NotNull String name, @NotNull WebDriver driver) {
         LogManager.getLogger().debug("Taking screenshot");
-        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(
-                OutputType.FILE);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
-        String scrFilename = name + formatter.format(LocalDateTime.now()) + "-Screenshot.png";
-        File output = new File("Screenshots", scrFilename);
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        File output = generateScreenshotName(name);
         output.mkdirs();
         try {
-            Files.copy(scrFile.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            LogManager.getLogger().error("Erroring screenshot after exception.", ioe);
+            copy(scrFile, output);
+        }
+        catch (InvalidPathException e) {
+            LogManager.getLogger().error("Can't create screenshot using specified name, falling back to default");
+            copy(scrFile, generateScreenshotName("screenshot"));
         }
     }
 
-    public static void logInAsAdmin(WebDriver driver) {
+    private static void copy(File source, File target) {
+        try {
+            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            LogManager.getLogger().error(ioe);
+        }
+    }
+
+    private static File generateScreenshotName(String name) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
+        return new File("Screenshots", String.format("%s %s.png", name, formatter.format(LocalDateTime.now())));
+    }
+
+    public static void logInAsAdmin(@NotNull WebDriver driver) {
         LogManager.getLogger().info("Logging in as admin");
         try {
             LoginPage log = new LoginPage(driver).get();
@@ -125,7 +140,6 @@ public abstract class MethodsForTests {
             LogManager.getLogger().debug(e.getMessage());
         }
     }
-
 
     @NotNull
     public static String encode(@NotNull String str) {

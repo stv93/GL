@@ -1,5 +1,6 @@
 package pages;
 
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,13 +11,16 @@ import org.openqa.selenium.support.FindBy;
  */
 public class LoginErrorPage extends Page<LoginErrorPage> {
 
-    public static final String LOGIN_ERROR_PAGE_URL = "http://seltr-kbp1-1.synapse.com:8080/loginError";
-
-    @FindBy(css = "#main-panel-content > div:nth-child(2) > a")
+    @FindBy(css = "#main-panel a[href*='login?from']")
     private WebElement tryAgain;
 
-    public LoginErrorPage(WebDriver driver) {
-        super(driver, LOGIN_ERROR_PAGE_URL);
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/loginError";
+    }
+
+    public LoginErrorPage(@NotNull WebDriver driver) {
+        super(driver);
     }
 
     public LoginPage tryAgain() {

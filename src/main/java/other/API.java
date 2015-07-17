@@ -56,10 +56,4 @@ public class API {
         }
         return result.isEmpty() ? new JSONObject() : new JSONObject(result);
     }
-
-   /* public static String getTimeStamp(String pageURL){
-        JSONObject jo = getJsonObject(pageURL);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm:ss");
-        return Instant.ofEpochMilli((long)jo.get("timestamp")).atZone(ZoneId.systemDefault()).format(formatter);
-    }*/
 }

@@ -44,17 +44,17 @@ public class ProjectTests extends BaseTests {
 
     @Nullable
     private String getRandomExistingProjectName() {
-        JSONArray jobs = api.request(HomePage.HOME_PAGE_URL).optJSONArray("jobs");
-        return jobs != null ? jobs.getJSONObject(random.nextInt(jobs.length())).getString("name") : null;
+        JSONArray jobs = api.request("http://seltr-kbp1-1.synapse.com:8080/").optJSONArray("jobs");
+        return jobs.length() != 0 ? jobs.getJSONObject(random.nextInt(jobs.length())).getString("name") : null;
     }
 
     private int getRandomBuildNumberFor(@NotNull String projectName) {
-        JSONArray builds = api.request(String.format(ProjectPage.PROJECT_PAGE_URL, MethodsForTests.encode(projectName))).optJSONArray("builds");
-        return builds != null ? builds.getJSONObject(random.nextInt(builds.length())).getInt("number") : 0;
+        JSONArray builds = api.request(String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/", MethodsForTests.encode(projectName))).optJSONArray("builds");
+        return builds.length() != 0 ? builds.getJSONObject(random.nextInt(builds.length())).getInt("number") : 0;
     }
 
     private Instant getBuildTime(@NotNull String projectName, int buildNumber) {
-        return Instant.ofEpochMilli(api.request(String.format(ProjectBuildPage.PROJECT_BUILD_PAGE_URL, MethodsForTests.encode(projectName), buildNumber)).optLong("timestamp"));
+        return Instant.ofEpochMilli(api.request(String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/%d", MethodsForTests.encode(projectName), buildNumber)).optLong("timestamp"));
     }
 
     @Test
