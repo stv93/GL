@@ -2,3 +2,6 @@ target/*
 .idea
 *.iml
 Screenshots
+.classpath
+.project
+.settings/*
