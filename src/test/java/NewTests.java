@@ -42,17 +42,6 @@ public class NewTests {
     	System.setProperty("log4j.configurationFile","log4j.xml");
     	driver = MethodsForTests.getDriver();
     }    
-   
-   @Ignore
-   @Test
-   public void signUpWithCorrectValue(){    	
-   		try{
-	   new SignUpPage(driver).get().signUp(correctName, password, password, correctName, correctEmail).getErrorText();   	
-   		}
-   		catch(NoSuchElementException e) {
-   			Assert.assertNull("Error element is abcent on this page", e);
-   		}
-   		}
     
     @Test
     public void makeScreeshotWithIncorrectName(){    	
@@ -62,17 +51,6 @@ public class NewTests {
     	} catch(InvalidPathException e){
     		Assert.assertNull("Incorrect file name", e);
     	}
-    }
-    
-    @Test
-    public void clearNullDriver(){    	
-    	try {
-    		MethodsForTests.logInAsAdmin(driver);
-    		MethodsForTests.usersClearing(list, null);
-	    }
-		catch (NullPointerException e) {
-			Assert.assertNull("List is null", e);
-		}
     }
     
     @Test
@@ -86,38 +64,27 @@ public class NewTests {
 		}
     }
 
-    @Test    
-    public void searchingExistUserOnMainPage(){
-	    try {    		
-	    	String expectedResult = MethodsForTests.makeAuthenticatedSession(driver,list);    	
-	    	new HomePage(driver).get().autoCompleteSearch(expectedResult.substring(10), expectedResult);
-	    }
-		catch (RuntimeException e) {
-			Assert.assertNull("Exsisted value not found", e);
-		}
-    }    
-    
-    @Test
-    public void searcUserWithNullList(){    		
-    	try {	 
-    		String expectedResult = MethodsForTests.makeAuthenticatedSession(driver,null);
-    		new LoginPage(driver).get().signIn("admin", "admin").autoCompleteSearch(expectedResult.substring(5), expectedResult);   
-    	}
-    	catch (NullPointerException e) {
-			Assert.assertNull("List is null", e);
-		}
-    }       
+//    @Test
+//    public void searcUserWithNullList(){    		
+//    	try {	 
+//    		String expectedResult = MethodsForTests.makeAuthenticatedSession(null);
+//    		new LoginPage(driver).get().signIn("admin", "admin").autoCompleteSearch(expectedResult.substring(5), expectedResult);   
+//    	}
+//    	catch (NullPointerException e) {
+//			Assert.assertNull("List is null", e);
+//		}
+//    }       
 
-    @Test
-    public void searchUserWithNullDriver(){    		
-    	try {	 
-    		String expectedResult = MethodsForTests.makeAuthenticatedSession(null,list);
-    	new LoginPage(driver).get().signIn("admin", "admin").autoCompleteSearch(expectedResult.substring(5), expectedResult);  
-	    } 
-		catch (NullPointerException e) {
-			Assert.assertNull("Driver is null", e);
-		}
-    }    
+//    @Test
+//    public void searchUserWithNullDriver(){    		
+//    	try {	 
+//    		String expectedResult = MethodsForTests.makeAuthenticatedSession(list);
+//    	new LoginPage(driver).get().signIn("admin", "admin").autoCompleteSearch(expectedResult.substring(5), expectedResult);  
+//	    } 
+//		catch (NullPointerException e) {
+//			Assert.assertNull("Driver is null", e);
+//		}
+//    }    
     
     @Test
     public void nullDriver(){
@@ -129,20 +96,20 @@ public class NewTests {
     	}
     }   
     
-    @SuppressWarnings("null")
-	@Test
-    public void isOnHomePage(){
-    	List<Page<?>> page = null;
-    	page.add(new HomePage(driver));
-    	
-    	try {
-    		new HomePage(driver).get();
-    	Assert.assertEquals(driver.getCurrentUrl(), HomePage.HOME_PAGE_URL);
-    	}
-    	catch(AssertionError err){    		
-    		Assert.assertNull("Right Page is not loaded" , err);    		
-    	}	
-    }
+//    @SuppressWarnings("null")
+//	@Test
+//    public void isOnHomePage(){
+//    	List<Page<?>> page = null;
+//    	page.add(new HomePage(driver));
+//    	
+//    	try {
+//    		new HomePage(driver).get();
+//    	Assert.assertEquals(driver.getCurrentUrl(), HomePage.HOME_PAGE_URL);
+//    	}
+//    	catch(AssertionError err){    		
+//    		Assert.assertNull("Right Page is not loaded" , err);    		
+//    	}	
+//    }
     
     @Test
     public void uncorrectStringParameter(){     	
