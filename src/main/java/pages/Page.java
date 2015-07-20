@@ -5,11 +5,15 @@ import org.apache.logging.log4j.Logger;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import other.MethodsForTests;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +22,13 @@ import java.util.Optional;
  */
 public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
 
+    public static final int SHORT_TIMEOUT = 5;
+    public static final int DEFAULT_TIMEOUT = 30;
+
+
     protected Logger log = LogManager.getLogger(this);
     protected WebDriver driver;
-    protected WebDriverWait wait;
+    private WebDriverWait wait;
 
     @FindBy(id = "search-box")
     private WebElement searchBox;
@@ -37,18 +45,36 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
     public abstract String getPageUrl();
 
     public Page(WebDriver driver) {
+        this(driver, false);
+    }
+
+    protected Page(WebDriver driver, boolean checkIfLoaded) {
         this.driver = driver;
-        wait = new WebDriverWait(driver, 2, 300);
+        wait = new WebDriverWait(driver, DEFAULT_TIMEOUT, 300);
         PageFactory.initElements(driver, this);
+        if (checkIfLoaded) {
+            waitForDocumentCompleteState();
+            isLoaded();
+        }
     }
 
     protected void clearField(WebElement field) {
         int length = Optional.ofNullable(field.getAttribute("value"))
                 .map(String::length)
                 .orElse(field.getText().length());
+        field.sendKeys(Keys.END);
         for (int i = length; i > 0; i--) {
             field.sendKeys(Keys.BACK_SPACE);
         }
+    }
+
+
+    protected void waitForDocumentCompleteState() {
+        try {
+            wait.until((ExpectedCondition<Boolean>) wd -> "complete".equals(
+                    ((JavascriptExecutor) wd).executeScript("return document.readyState").toString()));
+        }
+        catch (TimeoutException e) {}
     }
 
     protected boolean isLoggedIn() {
@@ -59,74 +85,56 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         return false;
     }
 
-    public UserPage autoCompleteSearch(String subString, String expectedResult) {
-        log.info("Searching for {} with selecting from autocomlete list {}", subString, expectedResult);
-        boolean presenceOfResult = false;
+    private List<WebElement> search(String token) throws RuntimeException {
+        try {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(searchBox)
+                .click()
+                .sendKeys(searchBox, token)
+                .perform();
+        return new WebDriverWait(driver, SHORT_TIMEOUT)
+                .until(ExpectedConditions.visibilityOf(autoComplete))
+                .findElements(By.cssSelector("li"));
+        }
+        catch(TimeoutException e){
+            throw new RuntimeException("There is no such value: " + token);
+        }
+    }
+
+    public UserPage autoCompleteSearch(String token, String searched) throws RuntimeException {
+        log.info("Searching for {} with selecting from autocomplete list {}", token, searched);
         clearField(searchBox);
+        new WebDriverWait(driver, SHORT_TIMEOUT).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".yui-ac-content")));
         try {
-            wait.until(ExpectedConditions.not(ExpectedConditions.visibilityOf(autoComplete)));
-        } catch (TimeoutException e) {
-            log.debug(e);
+            new Actions(driver).moveToElement(
+                    search(token).stream()
+                            .filter(x -> x.getText().equals(searched))
+                            .findFirst()
+                            .get())
+                    .click()
+                    .sendKeys(Keys.ENTER)
+                    .perform();
+            new WebDriverWait(driver, SHORT_TIMEOUT).until(ExpectedConditions.urlContains(MethodsForTests.encode(searched.toLowerCase())));
+            return UserPage.createUserPageWithLoadingValidation(driver, searched);
         }
-        searchBox.sendKeys(subString);
-        try {
-            wait.until(ExpectedConditions.visibilityOf(autoComplete));
-        } catch (TimeoutException e) {
-            throw new RuntimeException("There isn't such value: " + subString);
+        catch (java.util.NoSuchElementException e){
+            throw new RuntimeException("Item: " + searched + " is absent in the list");
         }
-        List<WebElement> list = autoComplete.findElements(By.tagName("li"));
-        for (WebElement li : list) {
-            if (li.getText().equals(expectedResult)) {
-                presenceOfResult = true;
-                li.click();
-                searchBox.sendKeys(Keys.ENTER);
-                break;
-            }
-        }
-        if (!presenceOfResult) {
-            throw new RuntimeException("Item: " + expectedResult + " is absent in the list");
-        }
-        UserPage userPage = new UserPage(driver, expectedResult);
-        if (userPage.isOnThePage()){
-            return new UserPage(driver, expectedResult);
-        }
-        return null;
-    }
-
-    private boolean isInTheJenkins(){
-        try {
-            return icon.isDisplayed();
-        } catch (NoSuchElementException e) {
-        }
-        return false;
-    }
-
-    protected boolean isOnThePage(){
-        boolean check = false;
-        for (int i = 0; i < 10; i++) {
-                try{
-                    isLoaded();
-                    check = true;
-                    break;
-                }
-                catch(Error e){
-                }
-            }
-        return check;
     }
 
     @Override
     protected void load() {
         log.debug("Loading url: {}", getPageUrl());
         driver.get(getPageUrl());
+        waitForDocumentCompleteState();
     }
+
+    //protected abstract void verifyUniqueElement() throws Error;
 
     @Override
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl().replaceAll("/$", "");
-//        if(!isInTheJenkins()){
-//            throw new Error("There is no such page:" + getPageUrl());
-//        }
         Assert.assertThat("Not on the right page.", getPageUrl().replaceAll("/$", ""), Matchers.equalToIgnoringCase(url));
+        // verifyUniqueElement();
     }
 }

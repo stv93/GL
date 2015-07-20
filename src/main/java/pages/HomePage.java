@@ -19,6 +19,10 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
         return "http://seltr-kbp1-1.synapse.com:8080/";
     }
 
+    protected HomePage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     public HomePage(@NotNull WebDriver driver) {
         super(driver);
     }

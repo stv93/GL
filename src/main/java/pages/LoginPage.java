@@ -33,6 +33,10 @@ public class LoginPage extends Page<LoginPage> {
         super(driver);
     }
 
+    protected LoginPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     @NotNull
     public HomePage signIn(@NotNull String login, @NotNull String password) {
         loginLocator.sendKeys(login);
@@ -41,7 +45,7 @@ public class LoginPage extends Page<LoginPage> {
         if(!isLoggedIn()){
             throw new Error("Entered login and password are incorrect");
         }
-        return new HomePage(driver);
+        return new HomePage(driver, true);
     }
 
     @NotNull
@@ -52,7 +56,7 @@ public class LoginPage extends Page<LoginPage> {
         if(isLoggedIn()){
             throw new Error("Entered login and password are correct");
         }
-        return new LoginErrorPage(driver);
+        return new LoginErrorPage(driver, true);
     }
 
     @Override
@@ -63,7 +67,7 @@ public class LoginPage extends Page<LoginPage> {
 
     public SignUpPage signUp() {
         signUpLink.click();
-        return new SignUpPage(driver);
+        return new SignUpPage(driver, true);
     }
 
 }

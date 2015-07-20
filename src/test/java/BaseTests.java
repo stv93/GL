@@ -13,7 +13,7 @@ import other.MethodsForTests;
 public class BaseTests {
 
     public static WebDriver driver;
-    protected final Logger logger = LogManager.getLogger(Tests.class);
+    protected final Logger logger = LogManager.getLogger(this);
 
     @Rule
     public TestWatcher watcher = new TestWatcher() {

@@ -23,8 +23,12 @@ public class LoginErrorPage extends Page<LoginErrorPage> {
         super(driver);
     }
 
+    protected LoginErrorPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     public LoginPage tryAgain() {
         tryAgain.click();
-        return new LoginPage(driver);
+        return new LoginPage(driver, true);
     }
 }

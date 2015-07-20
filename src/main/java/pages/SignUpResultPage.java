@@ -25,6 +25,10 @@ public class SignUpResultPage extends Page<SignUpResultPage> {
         super(driver);
     }
 
+    protected SignUpResultPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     public String getErrorText() {
         if(isLoggedIn()){
             return null;

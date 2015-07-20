@@ -60,7 +60,7 @@ public class SearchTests extends BaseTests {
     @Test
     public void searchForNonExistentValue(){
         String nonExistentValue = RandomForPages.randomString(15);
-        thrown.expectMessage("There isn't such value: "+ nonExistentValue);
+        thrown.expectMessage("There is no such value: "+ nonExistentValue);
         page.autoCompleteSearch(nonExistentValue, null);
     }
 }

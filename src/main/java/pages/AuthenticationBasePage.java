@@ -18,6 +18,10 @@ public abstract class AuthenticationBasePage<T extends AuthenticationBasePage<T>
         super(driver);
     }
 
+    protected AuthenticationBasePage(WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     @Override
     protected void load() {
         try {

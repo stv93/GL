@@ -1,19 +1,16 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hamcrest.CoreMatchers;
 import org.junit.*;
 import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.Statement;
-import org.openqa.selenium.WebDriver;
 import other.MethodsForTests;
 import other.RandomForPages;
 import pages.SignUpPage;
 import pages.SignUpResultPage;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +25,7 @@ import java.util.Set;
  * Created by tetiana.sviatska on 6/30/2015.
  */
 @RunWith(Parameterized.class)
-public class Tests extends BaseTests {
+public class SignUpTests extends BaseTests {
 
     public static SignUpPage signUpPage;
 
@@ -43,7 +40,7 @@ public class Tests extends BaseTests {
     String password = RandomForPages.randomString(6);
     String incorrectConfirmPassword = RandomForPages.randomString(6);
 
-    public Tests(boolean authorized) {
+    public SignUpTests(boolean authorized) {
         authorize = authorized;
     }
 
@@ -55,8 +52,6 @@ public class Tests extends BaseTests {
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     private @interface NeedsCleanUp {}
-
-
 
     @Rule
     public TestRule cleaningCookiesRule = (Statement base, Description d) -> new Statement() {

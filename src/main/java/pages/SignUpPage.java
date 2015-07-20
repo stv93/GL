@@ -37,6 +37,10 @@ public class SignUpPage extends Page<SignUpPage> {
         super(driver);
     }
 
+    protected SignUpPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String
             email) {
         log.info("Signing up with: (User: {}, Pass: {}, Confirm pass: {}, Name: {}, Email: {})", username, password,
@@ -47,6 +51,6 @@ public class SignUpPage extends Page<SignUpPage> {
         this.fullname.sendKeys(fullname);
         this.email.sendKeys(email);
         signUpButton.click();
-        return new SignUpResultPage(driver);
+        return new SignUpResultPage(driver, true);
     }
 }

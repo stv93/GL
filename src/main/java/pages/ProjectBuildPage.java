@@ -22,6 +22,11 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
         this.build = build;
     }
 
+    public ProjectBuildPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
+    }
+
+
     public String getBuildTime() {
         String headLineText = headLine.getText();
         return headLineText.substring(headLineText.indexOf("(") + 1, headLineText.indexOf(")"));
@@ -31,4 +36,13 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
     public String getPageUrl() {
         return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/%d", MethodsForTests.encode(projectName), build);
     }
+
+    /*protected static ProjectPage createProjectBuildPageWithLoadingValidation(@NotNull WebDriver driver, @NotNull String projectName, int build) {
+        return new ProjectPage(driver, true) {
+            @Override
+            public String getPageUrl() {
+                return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/%d", MethodsForTests.encode(projectName), build);
+            }
+        };
+    }*/
 }

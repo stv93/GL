@@ -20,6 +20,12 @@ import pages.SignUpPage;
 
 
 public class NewTests {
+	Set<String> list =  new HashSet<>();
+	String correctName = RandomForPages.randomString(20);
+    String correctEmail = RandomForPages.randomString(5) + "@";
+    String incorrectEmail = RandomForPages.randomString(5);
+    String password = RandomForPages.randomString(6);
+    String incorrectConfirmPassword = RandomForPages.randomString(6);
     private static WebDriver driver;
     
     SignUpPage signUpPage = new SignUpPage(driver);

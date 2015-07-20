@@ -10,9 +10,8 @@ import org.junit.runners.model.Statement;
 import other.API;
 import other.DateMatcher;
 import other.MethodsForTests;
-import pages.HomePage;
 import pages.ProjectBuildPage;
-import pages.ProjectPage;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
