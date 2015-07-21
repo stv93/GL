@@ -1,10 +1,8 @@
 package pages;
 
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.junit.Assert;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import other.MethodsForTests;
@@ -19,6 +17,9 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
     @FindBy(css = ".build-row [class*=\"zws-inserted\"]")
     private List<WebElement> builds;
 
+    @FindBy(css = ".task-link[href=\"#\"]")
+    private WebElement deleteProjectButton;
+
     private String projectName;
 
     public ProjectPage(@NotNull WebDriver driver, @NotNull String projectName) {
@@ -28,6 +29,11 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
 
     protected ProjectPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(deleteProjectButton.isDisplayed());
     }
 
     @Override

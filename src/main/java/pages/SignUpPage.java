@@ -1,6 +1,7 @@
 package pages;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -39,6 +40,11 @@ public class SignUpPage extends Page<SignUpPage> {
 
     protected SignUpPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(email.isDisplayed());
     }
 
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String

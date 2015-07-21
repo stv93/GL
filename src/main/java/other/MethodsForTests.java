@@ -24,10 +24,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by tetiana.sviatska on 7/8/2015.

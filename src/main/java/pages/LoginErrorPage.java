@@ -1,10 +1,10 @@
 package pages;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
@@ -25,6 +25,11 @@ public class LoginErrorPage extends Page<LoginErrorPage> {
 
     protected LoginErrorPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(tryAgain.isDisplayed());
     }
 
     public LoginPage tryAgain() {

@@ -129,12 +129,20 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         waitForDocumentCompleteState();
     }
 
-    //protected abstract void verifyUniqueElement() throws Error;
+    protected abstract void verifyUniqueElement() throws Error;
 
     @Override
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl().replaceAll("/$", "");
         Assert.assertThat("Not on the right page.", getPageUrl().replaceAll("/$", ""), Matchers.equalToIgnoringCase(url));
-        // verifyUniqueElement();
+        verifyUniqueElement();
+    }
+    protected boolean isElementPresent(WebElement webElement) {
+        try {
+            webElement.isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 }

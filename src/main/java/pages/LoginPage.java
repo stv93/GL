@@ -37,6 +37,11 @@ public class LoginPage extends Page<LoginPage> {
         super(driver, checkIfLoaded);
     }
 
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(loginLocator.isDisplayed());
+    }
+
     @NotNull
     public HomePage signIn(@NotNull String login, @NotNull String password) {
         loginLocator.sendKeys(login);

@@ -1,6 +1,8 @@
 package pages;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,6 +27,10 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
         super(driver, checkIfLoaded);
     }
 
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(driver.findElement(By.cssSelector("form[name=\"delete\"]")).isDisplayed());
+    }
 
     public HomePage deleteUser(){
         deleteButton.click();

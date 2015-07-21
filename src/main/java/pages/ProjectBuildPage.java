@@ -1,6 +1,8 @@
 package pages;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,6 +28,12 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
         super(driver, checkIfLoaded);
     }
 
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream()
+                .anyMatch(el -> el.getAttribute("href").endsWith("/confirmDelete")));
+        Assert.assertTrue(driver.findElement(By.id("description")).isDisplayed());
+    }
 
     public String getBuildTime() {
         String headLineText = headLine.getText();
