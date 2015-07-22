@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import other.OwnMatchers;
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
@@ -44,7 +45,7 @@ public class SignUpPage extends Page<SignUpPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(isElementPresent(email));
+        Assert.assertThat(email, OwnMatchers.presenceOfElement());
     }
 
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String

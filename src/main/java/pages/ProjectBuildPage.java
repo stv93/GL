@@ -7,6 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import other.MethodsForTests;
+import other.OwnMatchers;
+
 /**
  * Created by tetiana.sviatska on 7/13/2015.
  */
@@ -32,7 +34,7 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
     protected void verifyUniqueElement() throws Error {
         Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream()
                 .anyMatch(el -> el.getAttribute("href").endsWith("/confirmDelete")));
-        Assert.assertTrue(isElementPresent(driver.findElement(By.id("description"))));
+        Assert.assertThat(By.id("description"), OwnMatchers.presenceOfElementLocatedBy(driver));
     }
 
     public String getBuildTime() {

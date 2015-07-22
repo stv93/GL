@@ -2,11 +2,11 @@ package pages;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import other.MethodsForTests;
+import other.OwnMatchers;
 
 /**
  * Created by tetiana.sviatska on 7/7/2015.
@@ -15,6 +15,9 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
 
     @FindBy(id = "yui-gen1-button")
     private WebElement deleteButton;
+
+    @FindBy(css = "form[name=\"delete\"]")
+    private WebElement deleteForm;
 
     private String userName;
 
@@ -29,7 +32,7 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(isElementPresent(driver.findElement(By.cssSelector("form[name=\"delete\"]"))));
+        Assert.assertThat(deleteForm, OwnMatchers.presenceOfElement());
     }
 
     public HomePage deleteUser(){

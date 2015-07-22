@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import other.OwnMatchers;
+
 import java.util.List;
 
 /**
@@ -35,7 +37,7 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(isElementPresent(views) || isElementPresent(error));
+        Assert.assertThat(new WebElement[]{views, error}, OwnMatchers.presenceAnyOfElements());
     }
 
     public HomePage(@NotNull WebDriver driver) {

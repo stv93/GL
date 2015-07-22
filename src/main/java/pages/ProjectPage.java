@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import other.MethodsForTests;
+import other.OwnMatchers;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(isElementPresent(deleteProjectButton));
+        Assert.assertThat(deleteProjectButton, OwnMatchers.presenceOfElement());
     }
 
     @Override

@@ -142,6 +142,16 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
             Assert.fail("Not on the right page.");
         }
     }
+
+    protected boolean isElementPresent(By by) {
+        try {
+            driver.findElement(by).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
     protected boolean isElementPresent(WebElement webElement) {
         try {
             webElement.isDisplayed();
