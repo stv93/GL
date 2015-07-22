@@ -29,7 +29,7 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(driver.findElement(By.cssSelector("form[name=\"delete\"]")).isDisplayed());
+        Assert.assertTrue(isElementPresent(driver.findElement(By.cssSelector("form[name=\"delete\"]"))));
     }
 
     public HomePage deleteUser(){

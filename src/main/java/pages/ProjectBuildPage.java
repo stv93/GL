@@ -32,7 +32,7 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
     protected void verifyUniqueElement() throws Error {
         Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream()
                 .anyMatch(el -> el.getAttribute("href").endsWith("/confirmDelete")));
-        Assert.assertTrue(driver.findElement(By.id("description")).isDisplayed());
+        Assert.assertTrue(isElementPresent(driver.findElement(By.id("description"))));
     }
 
     public String getBuildTime() {

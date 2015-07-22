@@ -2,7 +2,6 @@ package pages;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,7 +35,7 @@ public class SignUpResultPage extends Page<SignUpResultPage> {
     }
 
     public String getErrorText() {
-        if(isLoggedIn()){
+        if(isElementPresent(toTheHomePage)){
             return null;
         }
         return error.getText();

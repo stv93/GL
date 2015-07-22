@@ -44,7 +44,7 @@ public class SignUpPage extends Page<SignUpPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(email.isDisplayed());
+        Assert.assertTrue(isElementPresent(email));
     }
 
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String

@@ -2,6 +2,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +15,9 @@ public class BaseTests {
 
     public static WebDriver driver;
     protected final Logger logger = LogManager.getLogger(this);
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Rule
     public TestWatcher watcher = new TestWatcher() {

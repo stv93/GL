@@ -39,7 +39,7 @@ public class LoginPage extends Page<LoginPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(loginLocator.isDisplayed());
+        Assert.assertTrue(isElementPresent(loginLocator));
     }
 
     @NotNull

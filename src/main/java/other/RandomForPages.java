@@ -1,12 +1,7 @@
 package other;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Created by tetiana.sviatska on 7/6/2015.

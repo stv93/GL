@@ -33,6 +33,8 @@ public class MethodsForTests {
 
     private MethodsForTests(){}
 
+    public static final String DEFAUL_PASSWORD = "defaulPassword";
+
     public static WebDriver getDriver() {
         WebDriver driver;
         String browser = System.getProperty("browser");
@@ -67,15 +69,14 @@ public class MethodsForTests {
      * @return login of the user which was used for authentication or {@code null} if there was an exception
      */
     @Nullable
-    public static String makeAuthenticatedSession(@Nullable Collection<String> list) {
+    public static String createUser(@Nullable Collection<String> list) {
         WebDriver wd = null;
         try {
             wd = new FirefoxDriver();
             SignUpPage signUpPage = new SignUpPage(wd).get();
             String randomName = RandomForPages.randomString(20);
-            String password = RandomForPages.randomString(5);
             String correctEmail = RandomForPages.randomString(6) + "@";
-            signUpPage.signUp(randomName, password, password, randomName, correctEmail);
+            signUpPage.signUp(randomName, DEFAUL_PASSWORD, DEFAUL_PASSWORD, randomName, correctEmail);
             Optional.ofNullable(list).ifPresent(l -> l.add(randomName));
             return randomName;
         } catch (Exception e) {

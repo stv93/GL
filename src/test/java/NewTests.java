@@ -1,22 +1,17 @@
-import java.nio.file.InvalidPathException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-
 import other.MethodsForTests;
 import other.RandomForPages;
-import pages.HomePage;
 import pages.LoginPage;
-import pages.Page;
 import pages.SignUpPage;
+
+import java.nio.file.InvalidPathException;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class NewTests {

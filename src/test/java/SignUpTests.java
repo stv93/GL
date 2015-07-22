@@ -1,20 +1,16 @@
 import org.hamcrest.CoreMatchers;
 import org.junit.*;
 import org.junit.rules.TestRule;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.Statement;
 import other.MethodsForTests;
 import other.RandomForPages;
+import pages.LoginPage;
 import pages.SignUpPage;
 import pages.SignUpResultPage;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,7 +27,6 @@ public class SignUpTests extends BaseTests {
 
     private boolean authorize;
     private static String authorizedUserName;
-
     private static Set<String> list = new HashSet<>();
 
     String correctName = RandomForPages.randomString(20);
@@ -48,26 +43,6 @@ public class SignUpTests extends BaseTests {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{{true}, {false}});
     }
-
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    private @interface NeedsCleanUp {}
-
-    @Rule
-    public TestRule cleaningCookiesRule = (Statement base, Description d) -> new Statement() {
-        @Override
-        public void evaluate() throws Throwable {
-            try {
-                base.evaluate();
-            }
-            finally {
-                if (d.getAnnotation(NeedsCleanUp.class) != null) {
-                    logger.debug("Clearing cookies");
-                    driver.manage().deleteAllCookies();
-                }
-            }
-        }
-    };
 
     @ClassRule
     public static TestRule setUpDriverAndCleanUpUsersRule = (base, d) -> new Statement() {
@@ -89,34 +64,30 @@ public class SignUpTests extends BaseTests {
     public TestRule parametrizationHandlingRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
-            if (authorizedUserName == null) {
-                authorizedUserName = MethodsForTests.makeAuthenticatedSession(list);
+            if (authorize && authorizedUserName == null) {
+                authorizedUserName = MethodsForTests.createUser(list);
+                new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAUL_PASSWORD);
             }
+            if(!authorize){
+                driver.manage().deleteAllCookies();
+            }
+            signUpPage = new SignUpPage(driver).get();
             base.evaluate();
         }
     };
 
-
-    @Before
-    public void before() {
-        signUpPage = new SignUpPage(driver).get();
+    private String getExistentName(){
+        if (!authorize)
+            return MethodsForTests.createUser(list);
+        return authorizedUserName;
     }
 
-    /*@After
-    public void after() {
-        if (authorize) {
-            driver.manage().deleteAllCookies();
-        }
-    }*/
-
-    @Ignore
     @Test
     public void nameIsTakenError() {
-        // FIXME I'm pre-condition
-        String username = MethodsForTests.makeAuthenticatedSession(list);
-        Assume.assumeThat(username, CoreMatchers.notNullValue());
+        String userName = getExistentName();
+        Assume.assumeThat(userName, CoreMatchers.notNullValue());
 
-        SignUpResultPage resultPage = signUpPage.signUp(username, password, password, "", correctEmail);
+        SignUpResultPage resultPage = signUpPage.signUp(userName, password, password, "", correctEmail);
         Assert.assertEquals("User name is already taken", resultPage.getErrorText());
     }
 
@@ -145,20 +116,17 @@ public class SignUpTests extends BaseTests {
         Assert.assertEquals("Password didnt match", resultPage.getErrorText());
     }
 
-    @Ignore
-    @NeedsCleanUp
     @Test
     public void successfulSignUp() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, password, "", correctEmail);
         Assert.assertEquals("Success", resultPage.getMessageText());
     }
 
-    @Ignore
     @Test
     public void unsuccessfulSignUp() {
         String incorrectUserName = RandomForPages.randomStringWithInvalidSymbols();
+        thrown.expectMessage("Not on the right page");
         SignUpResultPage resultPage = signUpPage.signUp(incorrectUserName, password, password, "", correctEmail);
         Assert.assertEquals(" Oops!", resultPage.getMessageText());
     }
-
 }

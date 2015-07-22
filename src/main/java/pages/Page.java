@@ -134,8 +134,13 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
     @Override
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl().replaceAll("/$", "");
-        Assert.assertThat("Not on the right page.", getPageUrl().replaceAll("/$", ""), Matchers.equalToIgnoringCase(url));
-        verifyUniqueElement();
+        try{
+            Assert.assertThat(getPageUrl().replaceAll("/$", ""), Matchers.equalToIgnoringCase(url));
+            verifyUniqueElement();
+        }
+        catch (AssertionError e){
+            Assert.fail("Not on the right page.");
+        }
     }
     protected boolean isElementPresent(WebElement webElement) {
         try {

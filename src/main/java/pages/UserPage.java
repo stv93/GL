@@ -31,7 +31,7 @@ public class UserPage extends AuthenticationBasePage<UserPage>{
     protected void verifyUniqueElement() throws Error {
         Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream().
                 anyMatch(webElement -> webElement.getAttribute("href").endsWith("/delete")));
-        Assert.assertTrue(driver.findElement(By.id("description")).isDisplayed());
+        Assert.assertTrue(isElementPresent(driver.findElement(By.id("description"))));
     }
 
     public String getName(){

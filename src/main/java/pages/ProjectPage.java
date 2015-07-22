@@ -2,12 +2,12 @@ package pages;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
-import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import other.MethodsForTests;
+
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Created by tetiana.sviatska on 7/13/2015.
@@ -33,7 +33,7 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(deleteProjectButton.isDisplayed());
+        Assert.assertTrue(isElementPresent(deleteProjectButton));
     }
 
     @Override

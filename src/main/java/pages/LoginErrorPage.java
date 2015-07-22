@@ -29,7 +29,7 @@ public class LoginErrorPage extends Page<LoginErrorPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(tryAgain.isDisplayed());
+        Assert.assertTrue(isElementPresent(tryAgain));
     }
 
     public LoginPage tryAgain() {

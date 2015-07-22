@@ -1,12 +1,14 @@
-import org.junit.*;
-import org.junit.rules.ExpectedException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
-import org.openqa.selenium.WebDriver;
 import other.MethodsForTests;
 import other.RandomForPages;
 import pages.HomePage;
 import pages.UserPage;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +27,7 @@ public class SearchTests extends BaseTests {
         @Override
         public void evaluate() throws Throwable {
             driver = MethodsForTests.getDriver();
-            expectedResult = MethodsForTests.makeAuthenticatedSession(list);
+            expectedResult = MethodsForTests.createUser(list);
             try {
                 base.evaluate();
             }
@@ -35,10 +37,6 @@ public class SearchTests extends BaseTests {
             }
         }
     };
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
 
     @Before
     public void before(){
