@@ -26,6 +26,9 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
     @FindBy(className = "tabBar")
     private WebElement views;
 
+    @FindBy(css = ".tab.active")
+    private  WebElement activeView;
+
     @Override
     public String getPageUrl() {
         return "http://seltr-kbp1-1.synapse.com:8080/";
@@ -33,6 +36,10 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
 
     protected HomePage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    public String getDefaulViewName(){
+        return activeView.getText();
     }
 
     @Override

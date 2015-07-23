@@ -10,7 +10,10 @@ import org.junit.runners.model.Statement;
 import other.API;
 import other.DateMatcher;
 import other.MethodsForTests;
+import other.RandomForPages;
 import pages.ProjectBuildPage;
+import pages.ProjectCreatingPage;
+import pages.ProjectPage;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -41,15 +44,28 @@ public class ProjectTests extends BaseTests {
         }
     };
 
-    @Nullable
-    private String getRandomExistingProjectName() {
+    private String createProject(String name){
+        ProjectCreatingPage projectCreatingPage = new ProjectCreatingPage(driver, getPrimaryViewName()).get();
+        projectCreatingPage.createFreestyleProject(name).saveProject(name);
+        return name;
+    }
+
+    private int createBuild(String name){
+        return new ProjectPage(driver, name).get().createBuild().getLastBuildNumber();
+    }
+
+    private String getPrimaryViewName(){
+        return api.request("http://seltr-kbp1-1.synapse.com:8080/").getJSONObject("primaryView").getString("name");
+    }
+
+    private String getRandomProjectName() {
         JSONArray jobs = api.request("http://seltr-kbp1-1.synapse.com:8080/").optJSONArray("jobs");
-        return jobs.length() != 0 ? jobs.getJSONObject(random.nextInt(jobs.length())).getString("name") : null;
+        return jobs.length() != 0 ? jobs.getJSONObject(random.nextInt(jobs.length())).getString("name") : createProject(RandomForPages.randomString(6));
     }
 
     private int getRandomBuildNumberFor(@NotNull String projectName) {
         JSONArray builds = api.request(String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/", MethodsForTests.encode(projectName))).optJSONArray("builds");
-        return builds.length() != 0 ? builds.getJSONObject(random.nextInt(builds.length())).getInt("number") : 0;
+        return builds.length() != 0 ? builds.getJSONObject(random.nextInt(builds.length())).getInt("number") : createBuild(projectName);
     }
 
     private Instant getBuildTime(@NotNull String projectName, int buildNumber) {
@@ -58,7 +74,7 @@ public class ProjectTests extends BaseTests {
 
     @Test
     public void compareWithJsonDate() {
-        String selectedProject = getRandomExistingProjectName();
+        String selectedProject = getRandomProjectName();
         Assume.assumeNotNull(selectedProject);
         int buildNumber = getRandomBuildNumberFor(selectedProject);
         LocalDateTime expected = LocalDateTime.ofInstant(getBuildTime(selectedProject, buildNumber), ZoneId.systemDefault());

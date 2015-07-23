@@ -28,7 +28,7 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
 
     protected Logger log = LogManager.getLogger(this);
     protected WebDriver driver;
-    private WebDriverWait wait;
+    protected WebDriverWait wait;
 
     @FindBy(id = "search-box")
     private WebElement searchBox;
@@ -67,7 +67,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
             field.sendKeys(Keys.BACK_SPACE);
         }
     }
-
 
     protected void waitForDocumentCompleteState() {
         try {
@@ -141,15 +140,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         catch (AssertionError e){
             Assert.fail("Not on the right page.");
         }
-    }
-
-    protected boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-        return true;
     }
 
     protected boolean isElementPresent(WebElement webElement) {
