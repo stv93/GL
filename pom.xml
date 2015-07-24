@@ -21,7 +21,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <browser>firefox</browser>
-                        <language>ru</language>
+                        <language>de</language>
                         <log4j.configurationFile>log4j.xml</log4j.configurationFile>
                     </systemPropertyVariables>
                 </configuration>
@@ -81,12 +81,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20141113</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.yandex.qatools.matchers</groupId>
-            <artifactId>webdriver-matchers</artifactId>
-            <version>1.1</version>
         </dependency>
 
     </dependencies>

@@ -1,5 +1,4 @@
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -7,10 +6,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
-import other.API;
-import other.DateMatcher;
-import other.MethodsForTests;
-import other.RandomForPages;
+import other.*;
 import pages.ProjectBuildPage;
 import pages.ProjectCreatingPage;
 import pages.ProjectPage;
@@ -18,7 +14,6 @@ import pages.ProjectPage;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
@@ -82,7 +77,7 @@ public class ProjectTests extends BaseTests {
         ProjectBuildPage page = new ProjectBuildPage(driver, selectedProject, buildNumber).get();
 
         LocalDateTime actual = LocalDateTime.from(
-                DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").parse(page.getBuildTime()));
+               LanguageDependencies.getDateTimeFormatter().parse(page.getBuildTime()));
 
         Assert.assertThat(actual, DateMatcher.equals(expected, ChronoUnit.SECONDS));
     }

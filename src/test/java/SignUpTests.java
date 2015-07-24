@@ -5,8 +5,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.Statement;
-import other.MethodsForTests;
-import other.RandomForPages;
+import other.*;
 import pages.LoginPage;
 import pages.SignUpPage;
 import pages.SignUpResultPage;
@@ -24,7 +23,6 @@ import java.util.Set;
 public class SignUpTests extends BaseTests {
 
     public static SignUpPage signUpPage;
-
     private boolean authorize;
     private static String authorizedUserName;
     private static Set<String> list = new HashSet<>();
@@ -41,7 +39,7 @@ public class SignUpTests extends BaseTests {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{{true}, {false}});
+        return Arrays.asList(new Object[][]{/*{true}, */{false}});
     }
 
     @ClassRule
@@ -66,7 +64,7 @@ public class SignUpTests extends BaseTests {
         public void evaluate() throws Throwable {
             if (authorize && authorizedUserName == null) {
                 authorizedUserName = MethodsForTests.createUser(list);
-                new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAUL_PASSWORD);
+                new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAULT_PASSWORD);
             }
             if(!authorize){
                 driver.manage().deleteAllCookies();
@@ -88,38 +86,44 @@ public class SignUpTests extends BaseTests {
         Assume.assumeThat(userName, CoreMatchers.notNullValue());
 
         SignUpResultPage resultPage = signUpPage.signUp(userName, password, password, "", correctEmail);
-        Assert.assertEquals("User name is already taken", resultPage.getErrorText());
+        System.out.println(resultPage.getErrorText());
+        Assert.assertEquals(Source.getValue("SignUpErrorNameIsTakenError"), resultPage.getErrorText());
     }
 
     @Test
     public void invalidEmailError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, password, "", incorrectEmail);
-        Assert.assertEquals("Invalid e-mail address", resultPage.getErrorText());
+        System.out.println(resultPage.getErrorText());
+        Assert.assertEquals(Source.getValue("SignUpErrorInvalidEmailError"), resultPage.getErrorText());
     }
 
     @Test
     public void passwordIsRequiredError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, null, password, "", correctEmail);
-        Assert.assertEquals("Password is required", resultPage.getErrorText());
+        System.out.println(resultPage.getErrorText());
+        Assert.assertEquals(Source.getValue("SignUpErrorPasswordIsRequired"), resultPage.getErrorText());
     }
 
     @Test
       public void usernameIsRequiredError() {
         SignUpResultPage resultPage = signUpPage.signUp(null, password, password, "", correctEmail);
-        Assert.assertEquals("User name is required", resultPage.getErrorText());
+        System.out.println(resultPage.getErrorText());
+        Assert.assertEquals(Source.getValue("SignUpErrorUsernameIsRequiredError"), resultPage.getErrorText());
     }
 
     @Test
     public void passwordDidntMatchError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, incorrectConfirmPassword, "",
                 correctEmail);
-        Assert.assertEquals("Password didnt match", resultPage.getErrorText());
+        System.out.println(resultPage.getErrorText());
+        Assert.assertEquals(Source.getValue("SignUpErrorPasswordDidntMatchError"), resultPage.getErrorText());
     }
 
     @Test
     public void successfulSignUp() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, password, "", correctEmail);
-        Assert.assertEquals("Success", resultPage.getMessageText());
+        System.out.println(resultPage.getMessageText());
+        Assert.assertEquals(Source.getValue("SignUpSuccess"), resultPage.getMessageText());
     }
 
     @Test
@@ -127,6 +131,7 @@ public class SignUpTests extends BaseTests {
         String incorrectUserName = RandomForPages.randomStringWithInvalidSymbols();
         thrown.expectMessage("Not on the right page");
         SignUpResultPage resultPage = signUpPage.signUp(incorrectUserName, password, password, "", correctEmail);
+        System.out.println(resultPage.getMessageText());
         Assert.assertEquals(" Oops!", resultPage.getMessageText());
     }
 }

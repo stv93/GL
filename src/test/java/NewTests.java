@@ -1,3 +1,4 @@
+/*
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,7 +34,7 @@ public class NewTests {
     @BeforeClass
     public static void before(){
     	System.setProperty("language", "ru");
-    	System.setProperty("browser", "firefox");
+    	System.setProperty("browser", "chrome");
     	System.setProperty("log4j.configurationFile","log4j.xml");
     	driver = MethodsForTests.getDriver();
     }    
@@ -48,7 +49,6 @@ public class NewTests {
     	}
     }
 
-    
     @Test
     public void uncorrectStringParameter(){     	
     	try{
@@ -71,3 +71,4 @@ public class NewTests {
     
   
 }
+*/

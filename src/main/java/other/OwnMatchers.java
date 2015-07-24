@@ -1,27 +1,22 @@
 package other;
 
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-
-import java.util.Arrays;
+import org.hamcrest.TypeSafeMatcher;
+import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.*;
 
 /**
  * Created by tetiana.sviatska on 7/22/2015.
  */
 public class OwnMatchers {
 
-    public static Matcher<By> presenceOfElementLocatedBy(WebDriver driver){
-        return new BaseMatcher<By>() {
+    public static Matcher<By> presenceOfElementLocatedBy(@NotNull WebDriver driver){
+        return new TypeSafeMatcher<By>() {
             @Override
-            public boolean matches(Object object) {
-                By locator = (By) object;
+            protected boolean matchesSafely(By by) {
                 try {
-                    WebElement element = driver.findElement(locator);
+                    WebElement element = driver.findElement(by);
                     element.isDisplayed();
                     return true;
                 } catch (WebDriverException e) {
@@ -36,12 +31,10 @@ public class OwnMatchers {
         };
     }
 
-
     public static Matcher<WebElement> presenceOfElement(){
-        return new BaseMatcher<WebElement>() {
+        return new TypeSafeMatcher<WebElement>() {
             @Override
-            public boolean matches(Object object) {
-                WebElement element = (WebElement) object;
+            protected boolean matchesSafely(WebElement element) {
                 try {
                     element.isDisplayed();
                     return true;
@@ -58,18 +51,25 @@ public class OwnMatchers {
     }
 
     public static Matcher<WebElement[]> presenceAnyOfElements(){
-        return new BaseMatcher<WebElement[]>() {
-            @Override
-            public boolean matches(Object object) {
-                WebElement[] array = (WebElement[]) object;
-                return Arrays.asList(array).stream().anyMatch(WebElement::isDisplayed);
-            }
+        return new TypeSafeMatcher<WebElement[]>(){
 
             @Override
             public void describeTo(Description description) {
                 description.appendText("Element is absent or not displayed");
             }
-        };
-    }
+
+            @Override
+            protected boolean matchesSafely(WebElement[] webElements) {
+                for (WebElement element: webElements){
+                    try {
+                        element.isDisplayed();
+                        return true;
+                    }
+                    catch (NoSuchElementException e) {}
+                }
+                return false;
+            }
+            };
+        }
 
 }

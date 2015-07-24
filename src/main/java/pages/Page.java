@@ -20,11 +20,11 @@ import java.util.Optional;
 /**
  * Created by tetiana.sviatska on 7/1/2015.
  */
+
 public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
 
     public static final int SHORT_TIMEOUT = 5;
     public static final int DEFAULT_TIMEOUT = 30;
-
 
     protected Logger log = LogManager.getLogger(this);
     protected WebDriver driver;

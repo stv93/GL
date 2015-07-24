@@ -10,6 +10,7 @@ import other.OwnMatchers;
 /**
  * Created by tetiana.sviatska on 6/30/2015.
  */
+
 public class SignUpPage extends Page<SignUpPage> {
 
     @FindBy(id = "username")

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by tetiana.sviatska on 6/30/2015.
  */
+
 public class HomePage extends AuthenticationBasePage<HomePage> {
 
     @FindBy(css = "#projectstatus a.model-link:not([href*=\"last\"])")
@@ -23,7 +24,7 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
     @FindBy(css = "p.error")
     private WebElement error;
 
-    @FindBy(className = "tabBar")
+    @FindBy(css = ".tabBar")
     private WebElement views;
 
     @FindBy(css = ".tab.active")

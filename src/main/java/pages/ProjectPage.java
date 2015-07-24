@@ -55,7 +55,7 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
         }
     }
 
-    public ProjectPage createBuild(){
+    public ProjectPage createBuild() throws RuntimeException{
         log.info("Creating build");
         int lastBuild = getLastBuildNumber();
         createBuild.click();

@@ -33,12 +33,12 @@ public class MethodsForTests {
 
     private MethodsForTests(){}
 
-    public static final String DEFAUL_PASSWORD = "defaulPassword";
+    public static final String DEFAULT_PASSWORD = "defaultPassword";
 
     public static WebDriver getDriver() {
         WebDriver driver;
-        String browser = System.getProperty("browser");
-        String language = System.getProperty("language");
+        String browser = System.getProperty("browser").toLowerCase();
+        String language = LanguageDependencies.getLanguage();
         switch (browser.toLowerCase()) {
             case "firefox":
                 FirefoxProfile profile = new FirefoxProfile();
@@ -52,14 +52,14 @@ public class MethodsForTests {
                 options.addArguments("--lang=" + language);
                 driver = new ChromeDriver(options);
                 break;
-            case "internetexplorer":
+            case "ie":
                 System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
                 driver = new InternetExplorerDriver();
                 break;
             default:
                 throw new IllegalStateException("No matching browser type found");
         }
-        LogManager.getLogger().info("Running tests in browser " + browser);
+        LogManager.getLogger().info("Running tests in browser: {}({})", browser, language);
         return driver;
     }
 
@@ -76,7 +76,7 @@ public class MethodsForTests {
             SignUpPage signUpPage = new SignUpPage(wd).get();
             String randomName = RandomForPages.randomString(20);
             String correctEmail = RandomForPages.randomString(6) + "@";
-            signUpPage.signUp(randomName, DEFAUL_PASSWORD, DEFAUL_PASSWORD, randomName, correctEmail);
+            signUpPage.signUp(randomName, DEFAULT_PASSWORD, DEFAULT_PASSWORD, randomName, correctEmail);
             Optional.ofNullable(list).ifPresent(l -> l.add(randomName));
             return randomName;
         } catch (Exception e) {

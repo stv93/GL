@@ -12,6 +12,7 @@ import other.OwnMatchers;
 /**
  * Created by tetiana.sviatska on 7/23/2015.
  */
+
 public class ProjectCreatingPage extends AuthenticationBasePage<ProjectCreatingPage> {
 
     @FindBy(id = "name")
@@ -37,7 +38,7 @@ public class ProjectCreatingPage extends AuthenticationBasePage<ProjectCreatingP
         super(driver, checkIfLoaded);
     }
 
-    public ProjectConfigurationPage createFreestyleProject(@NotNull String projectName){
+    public ProjectConfigurationPage createFreestyleProject(@NotNull String projectName) throws RuntimeException{
         log.info("Creating Freestyle Project: {}", projectName);
         try {
             nameInput.sendKeys(projectName);
