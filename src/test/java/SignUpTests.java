@@ -39,7 +39,7 @@ public class SignUpTests extends BaseTests {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{/*{true}, */{false}});
+        return Arrays.asList(new Object[][]{{true}, {false}});
     }
 
     @ClassRule
@@ -86,28 +86,24 @@ public class SignUpTests extends BaseTests {
         Assume.assumeThat(userName, CoreMatchers.notNullValue());
 
         SignUpResultPage resultPage = signUpPage.signUp(userName, password, password, "", correctEmail);
-        System.out.println(resultPage.getErrorText());
         Assert.assertEquals(Source.getValue("SignUpErrorNameIsTakenError"), resultPage.getErrorText());
     }
 
     @Test
     public void invalidEmailError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, password, "", incorrectEmail);
-        System.out.println(resultPage.getErrorText());
         Assert.assertEquals(Source.getValue("SignUpErrorInvalidEmailError"), resultPage.getErrorText());
     }
 
     @Test
     public void passwordIsRequiredError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, null, password, "", correctEmail);
-        System.out.println(resultPage.getErrorText());
         Assert.assertEquals(Source.getValue("SignUpErrorPasswordIsRequired"), resultPage.getErrorText());
     }
 
     @Test
       public void usernameIsRequiredError() {
         SignUpResultPage resultPage = signUpPage.signUp(null, password, password, "", correctEmail);
-        System.out.println(resultPage.getErrorText());
         Assert.assertEquals(Source.getValue("SignUpErrorUsernameIsRequiredError"), resultPage.getErrorText());
     }
 
@@ -115,14 +111,12 @@ public class SignUpTests extends BaseTests {
     public void passwordDidntMatchError() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, incorrectConfirmPassword, "",
                 correctEmail);
-        System.out.println(resultPage.getErrorText());
         Assert.assertEquals(Source.getValue("SignUpErrorPasswordDidntMatchError"), resultPage.getErrorText());
     }
 
     @Test
     public void successfulSignUp() {
         SignUpResultPage resultPage = signUpPage.signUp(correctName, password, password, "", correctEmail);
-        System.out.println(resultPage.getMessageText());
         Assert.assertEquals(Source.getValue("SignUpSuccess"), resultPage.getMessageText());
     }
 
@@ -131,7 +125,6 @@ public class SignUpTests extends BaseTests {
         String incorrectUserName = RandomForPages.randomStringWithInvalidSymbols();
         thrown.expectMessage("Not on the right page");
         SignUpResultPage resultPage = signUpPage.signUp(incorrectUserName, password, password, "", correctEmail);
-        System.out.println(resultPage.getMessageText());
         Assert.assertEquals(" Oops!", resultPage.getMessageText());
     }
 }

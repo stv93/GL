@@ -15,11 +15,10 @@ public class LanguageDependencies {
     private static String language;
 
     public static String getLanguage(){
-        final String defaultLanguage = "en";
         for (Languages lang : Languages.values()){
             if(lang.toString().equals(System.getProperty("language").toUpperCase()))
                 return lang.toString().toLowerCase();}
-        return defaultLanguage;
+        return "en";
         }
 
     public static DateTimeFormatter getDateTimeFormatter(){

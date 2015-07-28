@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import other.OwnMatchers;
+import other.Source;
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.

@@ -54,11 +54,6 @@ public class OwnMatchers {
         return new TypeSafeMatcher<WebElement[]>(){
 
             @Override
-            public void describeTo(Description description) {
-                description.appendText("Element is absent or not displayed");
-            }
-
-            @Override
             protected boolean matchesSafely(WebElement[] webElements) {
                 for (WebElement element: webElements){
                     try {
@@ -69,7 +64,11 @@ public class OwnMatchers {
                 }
                 return false;
             }
-            };
-        }
 
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Element is absent or not displayed");
+            }
+        };
+    }
 }
