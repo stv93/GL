@@ -32,6 +32,9 @@ public class SignUpPage extends Page<SignUpPage> {
     @FindBy(id = "yui-gen1-button")
     private WebElement signUpButton;
 
+    @FindBy(id = "main-panel")
+    private WebElement mainPanel;
+
     @Override
     public String getPageUrl() {
         return "http://seltr-kbp1-1.synapse.com:8080/signup";
@@ -47,7 +50,13 @@ public class SignUpPage extends Page<SignUpPage> {
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(email, OwnMatchers.presenceOfElement());
+        if(isSignUpAllowed()) {
+            Assert.assertThat(email, OwnMatchers.presenceOfElement());
+        }
+    }
+
+    public boolean isSignUpAllowed(){
+        return !mainPanel.getText().contains(Source.getValue("SignUPConfiguration"));
     }
 
     public SignUpResultPage signUp(String username, String password, String confirmPassword, String fullname, String

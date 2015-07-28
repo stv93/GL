@@ -5,8 +5,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.Statement;
-import other.*;
+import other.MethodsForTests;
+import other.RandomForPages;
+import other.Source;
 import pages.LoginPage;
+import pages.SecurityConfigurationPage;
 import pages.SignUpPage;
 import pages.SignUpResultPage;
 
@@ -26,6 +29,7 @@ public class SignUpTests extends BaseTests {
     private boolean authorize;
     private static String authorizedUserName;
     private static Set<String> list = new HashSet<>();
+    private static boolean allowedConfiguration;
 
     String correctName = RandomForPages.randomString(20);
     String correctEmail = RandomForPages.randomString(5) + "@";
@@ -47,10 +51,17 @@ public class SignUpTests extends BaseTests {
         @Override
         public void evaluate() throws Throwable {
             driver = MethodsForTests.getDriver();
+            allowedConfiguration = new SignUpPage(driver).get().isSignUpAllowed();
+            if(!allowedConfiguration){
+                new SecurityConfigurationPage(driver).get().allowsSignUp();
+            }
             try {
                 base.evaluate();
             }
             finally {
+                if(!allowedConfiguration){
+                    new SecurityConfigurationPage(driver).get().forbidsSignUp();
+                }
                 MethodsForTests.logInAsAdmin(driver);
                 MethodsForTests.usersClearing(list, driver);
                 driver.quit();
@@ -62,6 +73,7 @@ public class SignUpTests extends BaseTests {
     public TestRule parametrizationHandlingRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
+            Assume.assumeTrue(new SignUpPage(driver).get().isSignUpAllowed());
             if (authorize && authorizedUserName == null) {
                 authorizedUserName = MethodsForTests.createUser(list);
                 new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAULT_PASSWORD);
