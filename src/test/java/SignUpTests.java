@@ -9,11 +9,7 @@ import other.*;
 import pages.LoginPage;
 import pages.SignUpPage;
 import pages.SignUpResultPage;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -62,6 +58,7 @@ public class SignUpTests extends BaseTests {
     public TestRule parametrizationHandlingRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
+            Assume.assumeTrue(SignUpPage.isSingUpWorked());
             if (authorize && authorizedUserName == null) {
                 authorizedUserName = MethodsForTests.createUser(list);
                 new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAULT_PASSWORD);
@@ -69,7 +66,7 @@ public class SignUpTests extends BaseTests {
             if(!authorize){
                 driver.manage().deleteAllCookies();
             }
-            signUpPage = new SignUpPage(driver).get();
+                signUpPage = new SignUpPage(driver).get();
             base.evaluate();
         }
     };
