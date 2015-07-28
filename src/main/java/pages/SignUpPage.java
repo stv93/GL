@@ -6,7 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import other.OwnMatchers;
-import other.Source;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by tetiana.sviatska on 6/30/2015.
@@ -43,6 +45,27 @@ public class SignUpPage extends Page<SignUpPage> {
 
     protected SignUpPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    public static boolean isSingUpWorked(){
+        HttpURLConnection connection = null;
+        boolean isLinkExist = false;
+        try {
+            final URL url = new URL("http://seltr-kbp1-1.synapse.com:8080/signup");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                isLinkExist = true;
+            }
+            else{
+                isLinkExist = false;
+            }
+            connection.disconnect();
+        }catch (IOException e){
+            e.getMessage();
+        }
+        return isLinkExist;
     }
 
     @Override
