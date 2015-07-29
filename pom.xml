@@ -21,7 +21,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <browser>firefox</browser>
-                        <language>de</language>
+                        <language>fr</language>
                         <log4j.configurationFile>log4j.xml</log4j.configurationFile>
                     </systemPropertyVariables>
                 </configuration>

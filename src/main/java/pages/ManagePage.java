@@ -14,7 +14,7 @@ public class ManagePage extends AuthenticationBasePage<ManagePage>{
     @FindBy(css = "a[href=\"configureSecurity\"]")
     private WebElement securityConfiguration;
 
-    @FindBy(linkText = "a[href=\"configure\"]")
+    @FindBy(css = "a[class=\" \"][href=\"configure\"]")
     private WebElement systemConfiguration;
 
     protected ManagePage(WebDriver driver, boolean checkIfLoaded) {
@@ -32,7 +32,7 @@ public class ManagePage extends AuthenticationBasePage<ManagePage>{
 
     @Override
     protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(securityConfiguration, OwnMatchers.presenceOfElement());
-        Assert.assertThat(systemConfiguration, OwnMatchers.presenceOfElement());
+       Assert.assertThat(securityConfiguration, OwnMatchers.presenceOfElement());
+       Assert.assertThat(systemConfiguration, OwnMatchers.presenceOfElement());
     }
 }

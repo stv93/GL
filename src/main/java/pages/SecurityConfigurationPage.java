@@ -28,20 +28,22 @@ public class SecurityConfigurationPage extends AuthenticationBasePage<SecurityCo
         super(driver);
     }
 
-    public void allowsSignUp(){
+    public ManagePage allowsSignUp(){
         log.info("Check checkbox \"{}\"", Source.getValue("SecurityConfigurationAllowsSignUp"));
         if(!allowsSignUp.isSelected()){
             allowsSignUp.click();
         }
         saveButton.click();
+        return new ManagePage(driver, true);
     }
 
-    public void forbidsSignUp(){
+    public ManagePage forbidsSignUp(){
         log.info("Uncheck checkbox \"{}\"", Source.getValue("SecurityConfigurationAllowsSignUp"));
         if(allowsSignUp.isSelected()){
             allowsSignUp.click();
         }
         saveButton.click();
+        return new ManagePage(driver, true);
     }
 
     @Override
