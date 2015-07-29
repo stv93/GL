@@ -10,6 +10,7 @@ public class RandomForPages {
 
     private static final String INVALID_CHAR_SET = "?*|\"";
     private static Random random = new Random();
+
     private RandomForPages() {
     }
 

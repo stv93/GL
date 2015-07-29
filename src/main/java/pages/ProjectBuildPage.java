@@ -30,13 +30,6 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
         super(driver, checkIfLoaded);
     }
 
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream()
-                .anyMatch(el -> el.getAttribute("href").endsWith("/confirmDelete")));
-        Assert.assertThat(By.id("description"), OwnMatchers.presenceOfElementLocatedBy(driver));
-    }
-
     public String getBuildTime() {
         String headLineText = headLine.getText();
         return headLineText.substring(headLineText.indexOf("(") + 1, headLineText.indexOf(")"));
@@ -45,6 +38,13 @@ public class ProjectBuildPage extends AuthenticationBasePage<ProjectBuildPage> {
     @Override
     public String getPageUrl() {
         return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/%d", MethodsForTests.encode(projectName), build);
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream()
+                .anyMatch(el -> el.getAttribute("href").endsWith("/confirmDelete")));
+        Assert.assertThat(By.id("description"), OwnMatchers.presenceOfElementLocatedBy(driver));
     }
 
     /*protected static ProjectPage createProjectBuildPageWithLoadingValidation(@NotNull WebDriver driver, @NotNull String projectName, int build) {

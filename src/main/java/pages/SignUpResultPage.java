@@ -21,18 +21,8 @@ public class SignUpResultPage extends Page<SignUpResultPage> {
     @FindBy(css = "a[href=\"..\"]")
     private WebElement toTheHomePage;
 
-    @Override
-    public String getPageUrl() {
-        return "http://seltr-kbp1-1.synapse.com:8080/securityRealm/createAccount";
-    }
-
     protected SignUpResultPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
-    }
-
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(new WebElement[]{toTheHomePage, error}, OwnMatchers.presenceAnyOfElements());
     }
 
     public String getErrorText() {
@@ -44,6 +34,16 @@ public class SignUpResultPage extends Page<SignUpResultPage> {
 
     public String getMessageText(){
         return message.getText();
+    }
+
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/securityRealm/createAccount";
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertThat(new WebElement[]{toTheHomePage, error}, OwnMatchers.presenceAnyOfElements());
     }
 
 }

@@ -25,22 +25,12 @@ public class LoginPage extends Page<LoginPage> {
     @FindBy(css = "#main-panel-content a[href]")
     private WebElement signUpLink;
 
-    @Override
-    public String getPageUrl() {
-        return "http://seltr-kbp1-1.synapse.com:8080/login";
-    }
-
     public LoginPage(@NotNull WebDriver driver) {
         super(driver);
     }
 
     protected LoginPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
-    }
-
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(loginLocator, OwnMatchers.presenceOfElement());
     }
 
     @NotNull
@@ -65,15 +55,25 @@ public class LoginPage extends Page<LoginPage> {
         return new LoginErrorPage(driver, true);
     }
 
+    public SignUpPage goToSignUp() {
+        signUpLink.click();
+        return new SignUpPage(driver, true);
+    }
+
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/login";
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertThat(loginLocator, OwnMatchers.presenceOfElement());
+    }
+
     @Override
     protected void isLoaded() throws Error {
         String url = driver.getCurrentUrl();
         Assert.assertTrue("Not on the right page.", url.contains(getPageUrl()));
-    }
-
-    public SignUpPage signUp() {
-        signUpLink.click();
-        return new SignUpPage(driver, true);
     }
 
 }

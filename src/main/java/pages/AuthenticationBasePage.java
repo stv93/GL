@@ -14,6 +14,11 @@ public abstract class AuthenticationBasePage<T extends AuthenticationBasePage<T>
     @FindBy(css = ".login a[href*=\"/logout\"]")
     private WebElement logOut;
 
+    public LoginPage logout() {
+        logOut.click();
+        return new LoginPage(driver);
+    }
+
     protected AuthenticationBasePage(WebDriver driver) {
         super(driver);
     }
@@ -40,10 +45,4 @@ public abstract class AuthenticationBasePage<T extends AuthenticationBasePage<T>
         super.isLoaded();
         Assert.assertTrue("Log out button is not displayed", isLoggedIn());
     }
-
-    public LoginPage logout() {
-        logOut.click();
-        return new LoginPage(driver);
-    }
-
 }

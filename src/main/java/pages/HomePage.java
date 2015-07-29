@@ -30,13 +30,17 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
     @FindBy(css = ".tab.active")
     private  WebElement activeView;
 
-    @Override
-    public String getPageUrl() {
-        return "http://seltr-kbp1-1.synapse.com:8080/";
+    public HomePage(@NotNull WebDriver driver) {
+        super(driver);
     }
 
     protected HomePage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
+    }
+
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/";
     }
 
     public String getDefaulViewName(){
@@ -46,9 +50,5 @@ public class HomePage extends AuthenticationBasePage<HomePage> {
     @Override
     protected void verifyUniqueElement() throws Error {
         Assert.assertThat(new WebElement[]{views, error}, OwnMatchers.presenceAnyOfElements());
-    }
-
-    public HomePage(@NotNull WebDriver driver) {
-        super(driver);
     }
 }

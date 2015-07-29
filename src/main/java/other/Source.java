@@ -14,10 +14,6 @@ public class Source {
 
     private static Properties properties = null;
 
-    private static String getPropertyFIleName(String lang) {
-        return String.format("%sLanguage.properties", lang.toUpperCase());
-    }
-
     public static String getValue(String key) {
         if (properties == null) {
             properties = new Properties();
@@ -28,5 +24,9 @@ public class Source {
             }
         }
         return properties.getProperty(key);
+    }
+
+    private static String getPropertyFIleName(String lang) {
+        return String.format("%sLanguage.properties", lang.toUpperCase());
     }
 }

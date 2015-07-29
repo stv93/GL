@@ -42,8 +42,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
     @FindBy(id = "jenkins-head-icon")
     private WebElement icon;
 
-    public abstract String getPageUrl();
-
     public Page(WebDriver driver) {
         this(driver, false);
     }
@@ -58,6 +56,8 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         }
     }
 
+    public abstract String getPageUrl();
+
     protected void clearField(WebElement field) {
         int length = Optional.ofNullable(field.getAttribute("value"))
                 .map(String::length)
@@ -65,38 +65,6 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
         field.sendKeys(Keys.END);
         for (int i = length; i > 0; i--) {
             field.sendKeys(Keys.BACK_SPACE);
-        }
-    }
-
-    protected void waitForDocumentCompleteState() {
-        try {
-            wait.until((ExpectedCondition<Boolean>) wd -> "complete".equals(
-                    ((JavascriptExecutor) wd).executeScript("return document.readyState").toString()));
-        }
-        catch (TimeoutException e) {}
-    }
-
-    protected boolean isLoggedIn() {
-        try {
-            return logOut.isDisplayed();
-        } catch (NoSuchElementException e) {
-        }
-        return false;
-    }
-
-    private List<WebElement> search(String token) throws RuntimeException {
-        try {
-            Actions actions = new Actions(driver);
-            actions.moveToElement(searchBox)
-                .click()
-                .sendKeys(searchBox, token)
-                .perform();
-        return new WebDriverWait(driver, SHORT_TIMEOUT)
-                .until(ExpectedConditions.visibilityOf(autoComplete))
-                .findElements(By.cssSelector("li"));
-        }
-        catch(TimeoutException e){
-            throw new RuntimeException("There is no such value: " + token);
         }
     }
 
@@ -149,5 +117,37 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
             return false;
         }
         return true;
+    }
+
+    protected void waitForDocumentCompleteState() {
+        try {
+            wait.until((ExpectedCondition<Boolean>) wd -> "complete".equals(
+                    ((JavascriptExecutor) wd).executeScript("return document.readyState").toString()));
+        }
+        catch (TimeoutException e) {}
+    }
+
+    protected boolean isLoggedIn() {
+        try {
+            return logOut.isDisplayed();
+        } catch (NoSuchElementException e) {
+        }
+        return false;
+    }
+
+    private List<WebElement> search(String token) throws RuntimeException {
+        try {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(searchBox)
+                .click()
+                .sendKeys(searchBox, token)
+                .perform();
+        return new WebDriverWait(driver, SHORT_TIMEOUT)
+                .until(ExpectedConditions.visibilityOf(autoComplete))
+                .findElements(By.cssSelector("li"));
+        }
+        catch(TimeoutException e){
+            throw new RuntimeException("There is no such value: " + token);
+        }
     }
 }

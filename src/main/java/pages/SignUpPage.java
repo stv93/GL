@@ -35,24 +35,12 @@ public class SignUpPage extends Page<SignUpPage> {
     @FindBy(id = "main-panel")
     private WebElement mainPanel;
 
-    @Override
-    public String getPageUrl() {
-        return "http://seltr-kbp1-1.synapse.com:8080/signup";
-    }
-
     public SignUpPage(@NotNull WebDriver driver) {
         super(driver);
     }
 
     protected SignUpPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
-    }
-
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        if(isSignUpAllowed()) {
-            Assert.assertThat(email, OwnMatchers.presenceOfElement());
-        }
     }
 
     public boolean isSignUpAllowed(){
@@ -70,5 +58,17 @@ public class SignUpPage extends Page<SignUpPage> {
         this.email.sendKeys(email);
         signUpButton.click();
         return new SignUpResultPage(driver, true);
+    }
+
+    @Override
+    public String getPageUrl() {
+        return "http://seltr-kbp1-1.synapse.com:8080/signup";
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        if(isSignUpAllowed()) {
+            Assert.assertThat(email, OwnMatchers.presenceOfElement());
+        }
     }
 }

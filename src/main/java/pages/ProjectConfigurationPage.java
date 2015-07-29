@@ -27,15 +27,15 @@ public class ProjectConfigurationPage extends AuthenticationBasePage<ProjectConf
 
     private String projectName;
 
-    private ProjectConfigurationPage(@NotNull WebDriver driver, @NotNull boolean checkIfLoaded) {
-        super(driver, checkIfLoaded);
-    }
-
     public ProjectPage saveProject(@NotNull String projectName) throws RuntimeException{
         log.info("Saving project: {}", projectName);
         if(nameField.getAttribute("value").equals(projectName)) saveButton.click();
         else throw new RuntimeException("Names didn't match");
         return ProjectPage.createProjectPageWithLoadingValidation(driver,projectName);
+    }
+
+    private ProjectConfigurationPage(@NotNull WebDriver driver, @NotNull boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
     }
 
     @Override

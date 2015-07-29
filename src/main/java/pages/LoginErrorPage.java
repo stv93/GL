@@ -28,13 +28,13 @@ public class LoginErrorPage extends Page<LoginErrorPage> {
         super(driver, checkIfLoaded);
     }
 
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(tryAgain, OwnMatchers.presenceOfElement());
-    }
-
     public LoginPage tryAgain() {
         tryAgain.click();
         return new LoginPage(driver, true);
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertThat(tryAgain, OwnMatchers.presenceOfElement());
     }
 }

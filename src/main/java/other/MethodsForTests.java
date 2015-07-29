@@ -33,7 +33,6 @@ import java.util.Optional;
 public class MethodsForTests {
 
     private MethodsForTests(){}
-
     public static final String DEFAULT_PASSWORD = "defaultPassword";
 
     public static WebDriver getDriver() {
@@ -117,19 +116,6 @@ public class MethodsForTests {
         }
     }
 
-    private static void copy(File source, File target) {
-        try {
-            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            LogManager.getLogger().error(ioe);
-        }
-    }
-
-    private static File generateScreenshotName(String name) {
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
-        return new File("Screenshots", String.format("%s %s.png", name, formatter.format(LocalDateTime.now())));
-    }
-
     public static void logInAsAdmin(@NotNull WebDriver driver) {
         LogManager.getLogger().info("Logging in as admin");
         try {
@@ -148,5 +134,18 @@ public class MethodsForTests {
             e.printStackTrace();
         }
         return str;
+    }
+
+    private static void copy(File source, File target) {
+        try {
+            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            LogManager.getLogger().error(ioe);
+        }
+    }
+
+    private static File generateScreenshotName(String name) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
+        return new File("Screenshots", String.format("%s %s.png", name, formatter.format(LocalDateTime.now())));
     }
 }

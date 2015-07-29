@@ -28,13 +28,6 @@ public class UserPage extends AuthenticationBasePage<UserPage>{
         super(driver, checkIfLoaded);
     }
 
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream().
-                anyMatch(webElement -> webElement.getAttribute("href").endsWith("/delete")));
-        Assert.assertThat(By.id("description"), OwnMatchers.presenceOfElementLocatedBy(driver));
-    }
-
     public String getName(){
         return name.getText();
     }
@@ -42,6 +35,13 @@ public class UserPage extends AuthenticationBasePage<UserPage>{
     @Override
     public String getPageUrl() {
         return String.format("http://seltr-kbp1-1.synapse.com:8080/user/%s/", MethodsForTests.encode(userName));
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertTrue(driver.findElements(By.cssSelector("#tasks .task-link")).stream().
+                anyMatch(webElement -> webElement.getAttribute("href").endsWith("/delete")));
+        Assert.assertThat(By.id("description"), OwnMatchers.presenceOfElementLocatedBy(driver));
     }
 
     protected static UserPage createUserPageWithLoadingValidation(@NotNull WebDriver driver, @NotNull String userName) {

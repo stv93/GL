@@ -26,13 +26,8 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
         this.userName = userName;
     }
 
-    public UserDeletingPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+    protected UserDeletingPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
         super(driver, checkIfLoaded);
-    }
-
-    @Override
-    protected void verifyUniqueElement() throws Error {
-        Assert.assertThat(deleteForm, OwnMatchers.presenceOfElement());
     }
 
     public HomePage deleteUser(){
@@ -43,6 +38,11 @@ public class UserDeletingPage extends AuthenticationBasePage<UserDeletingPage> {
     @Override
     public String getPageUrl() {
         return String.format("http://seltr-kbp1-1.synapse.com:8080/user/%s/delete", MethodsForTests.encode(userName));
+    }
+
+    @Override
+    protected void verifyUniqueElement() throws Error {
+        Assert.assertThat(deleteForm, OwnMatchers.presenceOfElement());
     }
 
     /*protected static UserDeletingPage createUserDeletingPageWithLoadingValidation(@NotNull WebDriver driver, @NotNull String userName) {

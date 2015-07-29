@@ -34,16 +34,8 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
         this.projectName = projectName;
     }
 
-    private ExpectedCondition<Boolean> isBuildAdded(){
-        return new ExpectedCondition<Boolean>(){
-
-            int lastBuild = getLastBuildNumber();
-
-            @Override
-            public Boolean apply(@NotNull WebDriver input) {
-                return (getLastBuildNumber() > lastBuild);
-            }
-        };
+    protected ProjectPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
+        super(driver, checkIfLoaded);
     }
 
     public int getLastBuildNumber(){
@@ -69,8 +61,9 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
         return this;
     }
 
-    protected ProjectPage(@NotNull WebDriver driver, boolean checkIfLoaded) {
-        super(driver, checkIfLoaded);
+    @Override
+    public String getPageUrl() {
+        return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/", MethodsForTests.encode(projectName));
     }
 
     @Override
@@ -78,16 +71,23 @@ public class ProjectPage extends AuthenticationBasePage<ProjectPage> {
         Assert.assertThat(deleteProjectButton, OwnMatchers.presenceOfElement());
     }
 
-    @Override
-    public String getPageUrl() {
-        return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/", MethodsForTests.encode(projectName));
-    }
-
     protected static ProjectPage createProjectPageWithLoadingValidation(@NotNull WebDriver driver, @NotNull String projectName) {
         return new ProjectPage(driver, true) {
             @Override
             public String getPageUrl() {
                 return String.format("http://seltr-kbp1-1.synapse.com:8080/job/%s/", MethodsForTests.encode(projectName));
+            }
+        };
+    }
+
+    private ExpectedCondition<Boolean> isBuildAdded(){
+        return new ExpectedCondition<Boolean>(){
+
+            int lastBuild = getLastBuildNumber();
+
+            @Override
+            public Boolean apply(@NotNull WebDriver input) {
+                return (getLastBuildNumber() > lastBuild);
             }
         };
     }
