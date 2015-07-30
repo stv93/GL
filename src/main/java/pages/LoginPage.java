@@ -35,6 +35,7 @@ public class LoginPage extends Page<LoginPage> {
 
     @NotNull
     public HomePage signIn(@NotNull String login, @NotNull String password) {
+        log.info("Logging in as {}", login);
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
@@ -43,6 +44,7 @@ public class LoginPage extends Page<LoginPage> {
 
     @NotNull
     public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password) {
+        log.info("Logging in as {} with incorrect password", login);
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();

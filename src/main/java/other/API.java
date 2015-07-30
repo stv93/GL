@@ -1,5 +1,6 @@
 package other;
 
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -8,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Scanner;
+
 
 /**
  * Created by tetiana.sviatska on 7/14/2015.
@@ -47,7 +49,7 @@ public class API {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            LogManager.getLogger().error("Cannot get API from {}", pageURL);
         }
         finally {
             if (connection != null) {

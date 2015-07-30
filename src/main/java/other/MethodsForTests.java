@@ -3,6 +3,7 @@ package other;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.junit.Test;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -66,10 +67,6 @@ public class MethodsForTests {
         return driver;
     }
 
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("windows");
-    }
-
     /**
      * This method is used to create new user
      *
@@ -77,6 +74,7 @@ public class MethodsForTests {
      */
     @Nullable
     public static String createUser(@Nullable Collection<String> list) {
+        LogManager.getLogger().debug("Creating user");
         WebDriver wd = null;
         try {
             wd = new FirefoxDriver();
@@ -98,7 +96,7 @@ public class MethodsForTests {
 
             return randomName;
         } catch (Exception e) {
-            LogManager.getLogger().debug("User was not created");
+            LogManager.getLogger().error("User was not created");
         } finally {
             if (wd != null) {
                 wd.quit();
@@ -114,7 +112,7 @@ public class MethodsForTests {
                 UserDeletingPage userDeletingPage = new UserDeletingPage(driver, name).get();
                 userDeletingPage.deleteUser();
             } catch (Exception e) {
-                LogManager.getLogger().debug(e.getMessage());
+                LogManager.getLogger().error("Users were not deleted");
             }
         }
         LogManager.getLogger().debug("Users is deleted");
@@ -134,22 +132,12 @@ public class MethodsForTests {
         }
     }
 
-    public static void logInAsAdmin(@NotNull WebDriver driver) {
-        LogManager.getLogger().info("Logging in as admin");
-        try {
-            LoginPage log = new LoginPage(driver).get();
-            log.signIn("admin", "admin");
-        } catch (Exception e) {
-            LogManager.getLogger().debug(e.getMessage());
-        }
-    }
-
     @NotNull
     public static String encode(@NotNull String str) {
         try {
             return URLEncoder.encode(str, "UTF-8").replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            LogManager.getLogger().error("Encoding exception");
         }
         return str;
     }
@@ -158,12 +146,16 @@ public class MethodsForTests {
         try {
             Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
-            LogManager.getLogger().error(ioe);
+            LogManager.getLogger().error("Cannot copy a file");
         }
     }
 
     private static File generateScreenshotName(String name) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd HH.mm.ss");
         return new File("Screenshots", String.format("%s %s.png", name, formatter.format(LocalDateTime.now())));
+    }
+
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 }

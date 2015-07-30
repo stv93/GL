@@ -1,4 +1,3 @@
-import org.hamcrest.CoreMatchers;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
@@ -66,7 +65,6 @@ public class SignUpTests extends BaseTests {
                 if(!allowedConfiguration){
                     new SecurityConfigurationPage(driver).get().forbidsSignUp();
                 }
-                MethodsForTests.logInAsAdmin(driver);
                 MethodsForTests.usersClearing(list, driver);
                 driver.quit();
             }

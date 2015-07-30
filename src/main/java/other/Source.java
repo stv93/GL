@@ -1,5 +1,7 @@
 package other;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -21,7 +23,7 @@ public class Source {
             try (BufferedReader reader = Files.newBufferedReader(getPropertyFilePath(), Charset.forName("UTF-8"))) {
                 properties.load(reader);
             } catch (IOException e) {
-                e.printStackTrace();
+                LogManager.getLogger().error("Cannot get value {}", key);
             }
         }
         return properties.getProperty(key);
