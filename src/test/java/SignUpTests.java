@@ -50,12 +50,16 @@ public class SignUpTests extends BaseTests {
     public static TestRule setUpDriverAndCleanUpUsersRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
-            driver = MethodsForTests.getDriver();
-            allowedConfiguration = new SignUpPage(driver).get().isSignUpAllowed();
-            if(!allowedConfiguration){
-                new SecurityConfigurationPage(driver).get().allowsSignUp();
-            }
             try {
+                try {
+                    driver = MethodsForTests.getDriver();
+                    allowedConfiguration = new SignUpPage(driver).get().isSignUpAllowed();
+                    if (!allowedConfiguration) {
+                        new SecurityConfigurationPage(driver).get().allowsSignUp();
+                    }
+                } catch (Throwable e) {
+                    Assume.assumeNoException(e);
+                }
                 base.evaluate();
             }
             finally {
@@ -74,14 +78,19 @@ public class SignUpTests extends BaseTests {
         @Override
         public void evaluate() throws Throwable {
             Assume.assumeTrue(new SignUpPage(driver).get().isSignUpAllowed());
-            if (authorize && authorizedUserName == null) {
-                authorizedUserName = MethodsForTests.createUser(list);
-                new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAULT_PASSWORD);
-            }
-            if(!authorize){
+            try {
+
+                if (authorize && authorizedUserName == null) {
+                    authorizedUserName = MethodsForTests.createUser(list);
+                    new LoginPage(driver).get().signIn(authorizedUserName, MethodsForTests.DEFAULT_PASSWORD);
+                }
+                if(!authorize){
                 driver.manage().deleteAllCookies();
+                }
+                signUpPage = new SignUpPage(driver).get();
+            }catch(Throwable e){
+                Assume.assumeNoException(e);
             }
-            signUpPage = new SignUpPage(driver).get();
             base.evaluate();
         }
     };
@@ -95,7 +104,7 @@ public class SignUpTests extends BaseTests {
     @Test
     public void nameIsTakenError() {
         String userName = getExistentName();
-        Assume.assumeThat(userName, CoreMatchers.notNullValue());
+        Assume.assumeNotNull(userName);
 
         SignUpResultPage resultPage = signUpPage.signUp(userName, password, password, "", correctEmail);
         Assert.assertEquals(Source.getValue("SignUpErrorNameIsTakenError"), resultPage.getErrorText());
@@ -134,9 +143,8 @@ public class SignUpTests extends BaseTests {
 
     @Test
     public void unsuccessfulSignUp() {
-        String incorrectUserName = RandomForPages.randomStringWithInvalidSymbols();
         thrown.expectMessage("Not on the right page");
-        SignUpResultPage resultPage = signUpPage.signUp(incorrectUserName, password, password, "", correctEmail);
+        SignUpResultPage resultPage = signUpPage.signUp(RandomForPages.randomStringWithInvalidSymbols(), password, password, "", correctEmail);
         Assert.assertEquals(" Oops!", resultPage.getMessageText());
     }
 }

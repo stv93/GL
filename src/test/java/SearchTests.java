@@ -1,7 +1,4 @@
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runners.model.Statement;
 import other.MethodsForTests;
@@ -26,9 +23,14 @@ public class SearchTests extends BaseTests {
     public static TestRule setUpDriverAndCleanUpUsersRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
-            driver = MethodsForTests.getDriver();
-            expectedResult = MethodsForTests.createUser(list);
             try {
+                try{
+                    driver = MethodsForTests.getDriver();
+                    expectedResult = MethodsForTests.createUser(list);
+                    Assume.assumeNotNull(expectedResult);
+                }catch(Throwable e){
+                    Assume.assumeNoException(e);
+                }
                 base.evaluate();
             }
             finally {
@@ -58,6 +60,7 @@ public class SearchTests extends BaseTests {
     @Test
     public void searchForNonExistentValue(){
         String nonExistentValue = RandomForPages.randomString(15);
+        Assume.assumeNotNull(nonExistentValue);
         thrown.expectMessage("There is no such value: "+ nonExistentValue);
         page.autoCompleteSearch(nonExistentValue, null);
     }

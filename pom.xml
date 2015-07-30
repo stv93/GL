@@ -31,7 +31,7 @@
                 <version>2.18</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <browser>firefox</browser>
+                        <browser>chrome</browser>
                         <language>en</language>
                         <log4j.configurationFile>log4j.xml</log4j.configurationFile>
                     </systemPropertyVariables>

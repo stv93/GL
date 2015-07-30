@@ -30,10 +30,15 @@ public class ProjectTests extends BaseTests {
     public static TestRule setUpDriverAndCleanUpUsersRule = (base, d) -> new Statement() {
         @Override
         public void evaluate() throws Throwable {
-            driver = MethodsForTests.getDriver();
             try {
+                try{
+                    driver = MethodsForTests.getDriver();
+                }catch (Throwable e){
+                    Assume.assumeNoException(e);
+                }
                 base.evaluate();
-            } finally {
+            }
+            finally {
                 driver.quit();
             }
         }
@@ -69,16 +74,23 @@ public class ProjectTests extends BaseTests {
 
     @Test
     public void compareWithJsonDate() {
-        String selectedProject = getRandomProjectName();
-        Assume.assumeNotNull(selectedProject);
-        int buildNumber = getRandomBuildNumberFor(selectedProject);
-        LocalDateTime expected = LocalDateTime.ofInstant(getBuildTime(selectedProject, buildNumber), ZoneId.systemDefault());
+        String selectedProject = null;
+        int buildNumber = 0;
+        LocalDateTime expected = null;
+
+        try{
+            selectedProject = getRandomProjectName();
+            Assume.assumeNotNull(selectedProject);
+            buildNumber = getRandomBuildNumberFor(selectedProject);
+            Assume.assumeNotNull(buildNumber);
+            expected = LocalDateTime.ofInstant(getBuildTime(selectedProject, buildNumber), ZoneId.systemDefault());
+        }catch (Throwable e){
+            Assume.assumeNoException(e);
+        }
 
         ProjectBuildPage page = new ProjectBuildPage(driver, selectedProject, buildNumber).get();
-
         LocalDateTime actual = LocalDateTime.from(
                LanguageDependencies.getDateTimeFormatter().parse(page.getBuildTime()));
-
         Assert.assertThat(actual, DateMatcher.equals(expected, ChronoUnit.SECONDS));
     }
 }

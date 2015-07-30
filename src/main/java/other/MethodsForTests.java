@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import pages.LoginPage;
+import pages.SecurityConfigurationPage;
 import pages.SignUpPage;
 import pages.UserDeletingPage;
 
@@ -79,14 +80,25 @@ public class MethodsForTests {
         WebDriver wd = null;
         try {
             wd = new FirefoxDriver();
+            boolean allowedConfiguration = new SignUpPage(wd).get().isSignUpAllowed();
+
+            if(!allowedConfiguration){
+                new SecurityConfigurationPage(wd).get().allowsSignUp();
+            }
+
             SignUpPage signUpPage = new SignUpPage(wd).get();
             String randomName = RandomForPages.randomString(20);
             String correctEmail = RandomForPages.randomString(6) + "@";
             signUpPage.signUp(randomName, DEFAULT_PASSWORD, DEFAULT_PASSWORD, randomName, correctEmail);
             Optional.ofNullable(list).ifPresent(l -> l.add(randomName));
+
+            if(!allowedConfiguration){
+                new SecurityConfigurationPage(wd).get().forbidsSignUp();
+            }
+
             return randomName;
         } catch (Exception e) {
-            LogManager.getLogger().debug(e.getMessage());
+            LogManager.getLogger().debug("User was not created");
         } finally {
             if (wd != null) {
                 wd.quit();
