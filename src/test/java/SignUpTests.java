@@ -109,13 +109,13 @@ public class SignUpTests extends BaseTests {
 
     @Test
     public void passwordIsRequiredError() {
-        SignUpResultPage resultPage = signUpPage.signUp(correctName, null, password, "", correctEmail);
+        SignUpResultPage resultPage = signUpPage.signUp(correctName, "", password, "", correctEmail);
         Assert.assertEquals(Source.getValue("SignUpErrorPasswordIsRequired"), resultPage.getErrorText());
     }
 
     @Test
       public void usernameIsRequiredError() {
-        SignUpResultPage resultPage = signUpPage.signUp(null, password, password, "", correctEmail);
+        SignUpResultPage resultPage = signUpPage.signUp("", password, password, "", correctEmail);
         Assert.assertEquals(Source.getValue("SignUpErrorUsernameIsRequiredError"), resultPage.getErrorText());
     }
 

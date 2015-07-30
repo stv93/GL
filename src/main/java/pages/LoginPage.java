@@ -34,24 +34,18 @@ public class LoginPage extends Page<LoginPage> {
     }
 
     @NotNull
-    public HomePage signIn(@NotNull String login, @NotNull String password) throws RuntimeException{
+    public HomePage signIn(@NotNull String login, @NotNull String password) {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
-        if(!isLoggedIn()){
-            throw new RuntimeException("Entered login and password are incorrect");
-        }
         return new HomePage(driver, true);
     }
 
     @NotNull
-    public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password) throws RuntimeException{
+    public LoginErrorPage incorrectSignIn(@Nullable String login, @Nullable String password) {
         loginLocator.sendKeys(login);
         passwordLocator.sendKeys(password);
         signInButton.click();
-        if(isLoggedIn()){
-            throw new RuntimeException("Entered login and password are correct");
-        }
         return new LoginErrorPage(driver, true);
     }
 
