@@ -37,13 +37,13 @@ public class SignUpTests extends BaseTests {
     String password = RandomForPages.randomString(6);
     String incorrectConfirmPassword = RandomForPages.randomString(6);
 
-    public SignUpTests(boolean authorized) {
+    public SignUpTests(String description, boolean authorized) {
         authorize = authorized;
     }
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{{true}, {false}});
+        return Arrays.asList(new Object[][]{{"Authorizied", true}, {"Unauthorized", false}});
     }
 
     @ClassRule
