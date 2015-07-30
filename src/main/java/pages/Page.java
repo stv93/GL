@@ -128,6 +128,7 @@ public abstract class Page<T extends Page<T>> extends LoadableComponent<T> {
     }
 
     protected boolean isLoggedIn() {
+        waitForDocumentCompleteState();
         try {
             return logOut.isDisplayed();
         } catch (NoSuchElementException e) {
