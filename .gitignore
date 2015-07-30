@@ -2,6 +2,7 @@ target/*
 .idea
 *.iml
 Screenshots
+.DS_Store
 .classpath
 .project
 .settings/*

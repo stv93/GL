@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,13 +48,14 @@ public class MethodsForTests {
                 driver = new FirefoxDriver(profile);
                 break;
             case "chrome":
-                System.setProperty("webdriver.chrome.driver", "ChromeDriver\\chromedriver.exe");
+                String driverName = isWindows() ? "chromedriver.exe" : "chromedriver";
+                System.setProperty("webdriver.chrome.driver", Paths.get("drivers", driverName).toString());
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments("--lang=" + language);
                 driver = new ChromeDriver(options);
                 break;
             case "ie":
-                System.setProperty("webdriver.ie.driver", "IEDriver\\IEDriverServer.exe");
+                System.setProperty("webdriver.ie.driver", "drivers\\IEDriverServer.exe");
                 driver = new InternetExplorerDriver();
                 break;
             default:
@@ -61,6 +63,10 @@ public class MethodsForTests {
         }
         LogManager.getLogger().info("Running tests in browser: {}({})", browser, language);
         return driver;
+    }
+
+    private static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("windows");
     }
 
     /**
